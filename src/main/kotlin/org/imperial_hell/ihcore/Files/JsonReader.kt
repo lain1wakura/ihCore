@@ -94,6 +94,7 @@ class JsonReader(private val server: Ihcore) {
             styleObjectNode.putArray("accessories").addAll(style.accessories.map { objectMapper.convertValue(it) })
             styleObjectNode.putArray("headwear").addAll(style.headwear.map { objectMapper.convertValue(it) })
             styleObjectNode.put("skin_url", style.skinUrl)
+            //
 
             stylesArrayNode.add(styleObjectNode)
         }
