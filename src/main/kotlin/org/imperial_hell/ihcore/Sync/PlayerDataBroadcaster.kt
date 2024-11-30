@@ -1,27 +1,23 @@
-package org.imperial_hell.ihcore.ChatTyping
-import net.fabricmc.fabric.api.networking.v1.PacketType
+package org.imperial_hell.ihcore.Sync
+
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
-import org.imperial_hell.ihcore.NetworkCore.Packets.StringPacket
+import org.imperial_hell.ihcore.NetworkCore.Packets.PlayerDataPacket
 import org.imperial_hell.ihcore.NetworkCore.PacketsList
 import org.imperial_hell.ihcore.NetworkCore.ServerPacketSender
+import kotlin.collections.forEach
 
-object ServerTypingBroadcaster {
+object PlayerDataBroadcaster {
 
-    fun broadcastPlayerStartTyping(player: ServerPlayerEntity) {
-        val visiblePlayers = getVisiblePlayersFor(player, 32.0)
+    var LOCAL_BROADCAST_DISTANCE = 32.0
+
+    fun localBroadcast(player: ServerPlayerEntity, data: PlayerDataPacket) {
+        val visiblePlayers = getVisiblePlayersFor(player, LOCAL_BROADCAST_DISTANCE)
         visiblePlayers.forEach { visiblePlayer ->
-            ServerPacketSender.send(visiblePlayer, PacketsList.CHAT_TYPING, StringPacket(player.uuid.toString()))
+            ServerPacketSender.send(visiblePlayer, PacketsList.PLAYER_DATA, data)
+            println("Отправка данных о ${player.name} для ${visiblePlayer.name}")
         }
     }
-
-    fun broadcastPlayerEndTyping(player: ServerPlayerEntity) {
-        val visiblePlayers = getVisiblePlayersFor(player, 32.0)
-        visiblePlayers.forEach { visiblePlayer ->
-            ServerPacketSender.send(visiblePlayer, PacketsList.END_TYPING, StringPacket(player.uuid.toString()))
-        }
-    }
-
 
     fun getVisiblePlayersFor(player: ServerPlayerEntity, radius: Double): List<ServerPlayerEntity> {
         // Получаем мир, в котором находится игрок
@@ -34,5 +30,5 @@ object ServerTypingBroadcaster {
         }
         return visiblePlayers
     }
-    
+
 }

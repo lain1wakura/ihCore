@@ -2,16 +2,23 @@ package org.imperial_hell.ihcore.client
 
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
+import net.minecraft.client.MinecraftClient
+import net.minecraft.client.network.ClientPlayerEntity
+import org.imperial_hell.ihcore.Sync.ProximityDataManager
+import org.imperial_hell.ihcore.Utils.IhTimer
 
 import org.imperial_hell.ihcore.client.Messages.TypingMessageManager
 import org.imperial_hell.ihcore.client.Network.ClientNetworkHandler
 
 class IhcoreClient : ClientModInitializer {
 
-    var chatFlag = false
+    var timer: IhTimer = IhTimer(20)
+
+    lateinit var proximityDataManager: ProximityDataManager
 
     override fun onInitializeClient() {
         ClientNetworkHandler.registerClient()
+
         typingMessageManager.registerTypingEvents()
 
         // Регистрация события ClientTick, которое будет срабатывать на каждом тике
@@ -20,14 +27,12 @@ class IhcoreClient : ClientModInitializer {
             if (client.world != null && !screenOpened) {
                 // Проверка, что мир загружен и экран еще не был открыт
                 screenOpened = true
+                proximityDataManager = ProximityDataManager(MinecraftClient.getInstance().player as ClientPlayerEntity)
                 //MinecraftClient.getInstance().setScreen(SyncMenu())  // Открытие экрана
-//                client.player?.sendMessage(Text.of("Пакет отправлен"), false) // Отправляем сообщение игроку
-//                val response = responseRequest(
-//                    packetId = PacketsList.GIVE_ALL_CHARACTERS,
-//                    requestPacket = SignalPacket(),
-//                    responseClass = CharactersPacket::class.java
-//                )
-//                client.player?.sendMessage(Text.of("Пакет получен: ${response}"), false) // Отправляем сообщение игроку
+                    if (timer.hasReached()) {
+                        // Ваш код, который нужно вызывать с указанным интервалом
+                        proximityDataManager.updateProximityData()
+                    }
             }
         }
 

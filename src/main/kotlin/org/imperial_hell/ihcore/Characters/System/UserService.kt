@@ -21,6 +21,33 @@ class UserService(private val databaseManager: DatabaseManager) {
         }
     }
 
+    fun updatePlayerForUser(userUuid: String, player: String): Boolean {
+        return try {
+            // Создаем фильтр для поиска пользователя по UUID
+            val userFilter = mapOf("uuid" to userUuid)
+
+            // Обновление поля "player" для пользователя
+            val updateResult = databaseManager.updateFieldInDocument(
+                "profiles",  // Коллекция пользователей
+                userFilter,  // Фильтр для поиска пользователя
+                "player",  // Поле, которое нужно обновить
+                player  // Новое значение для поля "player"
+            )
+
+            if (updateResult) {
+                println("Поле 'player' для пользователя $userUuid успешно обновлено.")
+                return true
+            } else {
+                println("Ошибка при обновлении поля 'player' для пользователя $userUuid.")
+                return false
+            }
+        } catch (e: Exception) {
+            println("Ошибка при обновлении поля 'player' для пользователя $userUuid: ${e.message}")
+            false
+        }
+    }
+
+
     fun getUserUuid(nickname: String): String? {
         return try {
             databaseManager.fetchOne(

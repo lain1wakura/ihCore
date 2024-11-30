@@ -23,31 +23,6 @@ object ClientNetworkHandler {
         ClientPlayNetworking.registerGlobalReceiver(PacketsList.SYNC_REQUEST) { client, handler, buf, sender ->
             //dsd
         }
-        ClientPlayNetworking.registerGlobalReceiver(PacketsList.CHAT_TYPING) { client, handler, buf, sender ->
-            val packet = StringPacket()
-            packet.setBuffer(buf)
-            val uuid = packet.read()
-            println("Получен пакет отправки сообщения с UUID: $uuid")
-
-            val world = MinecraftClient.getInstance().world as World
-            val player = world.getPlayerByUuid(UUID.fromString(uuid))
-            if (player != null) {
-                IhcoreClient.typingMessageManager.addTypingPlayer(player.uuid)
-
-            }
-        }
-        ClientPlayNetworking.registerGlobalReceiver(PacketsList.END_TYPING) { client, handler, buf, sender ->
-            val packet = StringPacket()
-            packet.setBuffer(buf)
-            val uuid = packet.read()
-            println("Получен пакет отправки сообщения с UUID: $uuid")
-
-            val world = MinecraftClient.getInstance().world as World
-            val player = world.getPlayerByUuid(UUID.fromString(uuid))
-            if (player != null) {
-                IhcoreClient.typingMessageManager.removeTypingPlayer(player.uuid)
-            }
-        }
     }
 
     // Метод для отправки запроса и ожидания ответа

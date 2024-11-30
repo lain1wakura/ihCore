@@ -10,14 +10,13 @@ import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
 import org.imperial_hell.ihcore.Model.Character
 import org.imperial_hell.ihcore.Ihcore
+import java.util.function.Supplier
 
 class SyncCommand(val server: Ihcore) {
 
     // Регистрация команды
-    fun register(
-        dispatcher: CommandDispatcher<ServerCommandSource>,
-    ) {
-        // Здесь создается сама команда
+    fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
+        // Создаем команду "ih_sync"
         dispatcher.register(
             CommandManager.literal("ih_sync")
                 .then(
@@ -31,12 +30,22 @@ class SyncCommand(val server: Ihcore) {
 
     // Метод для обработки команды
     private fun execute(context: CommandContext<ServerCommandSource>): Int {
-        val uuid = StringArgumentType.getString(context, "uuid") // Получаем аргумент "name"
-        val player = context.source.player as ServerPlayerEntity// Получаем игрока, который выполнил команд
+        val uuid = StringArgumentType.getString(context, "uuid") // Получаем UUID из аргумента
+        val player = context.source.player // Получаем игрока, который вызвал команду
 
-        server.userManager.syncPlayer(player, uuid)
+        if (player == null) {
+            context.source.sendError(Text.of("Команду можно выполнить только игроком!"))
+            return Command.SINGLE_SUCCESS // Возвращаем успешный код, несмотря на ошибку
+        }
+
+        // Вызов метода синхронизации
+        try {
+            server.userManager.syncPlayer(player, uuid)
+            context.source.sendFeedback(Text.of("Игрок успешно синхронизирован!") as Supplier<Text?>?, false)
+        } catch (e: Exception) {
+            context.source.sendError(Text.of("Ошибка при синхронизации игрока: ${e.message}"))
+        }
 
         return Command.SINGLE_SUCCESS
     }
-
 }

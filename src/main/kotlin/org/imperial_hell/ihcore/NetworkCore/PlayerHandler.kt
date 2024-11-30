@@ -1,8 +1,8 @@
 package org.imperial_hell.ihcore.NetworkCore
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.server.network.ServerPlayerEntity
-import org.imperial_hell.ihcore.Model.Character
 import org.imperial_hell.ihcore.Ihcore
+import org.imperial_hell.ihcore.Sync.ProximityPlayerData
 
 class PlayerHandler(val server : Ihcore) {
 
@@ -24,6 +24,8 @@ class PlayerHandler(val server : Ihcore) {
 
     // Обработка игрока, когда он зашел на сервер
     fun onPlayerJoin(player: ServerPlayerEntity) {
+        server.playerDataStorage.updatePlayerData(player.uuid, ProximityPlayerData.getBlankPlayerData(player.uuidAsString))
+
         val uuid = server.userService.getUserUuid(player.name.string) as String
         if (uuid == "Undefined") {
             //ServerPacketSender.send(player, PacketsList.SYNC_REQUEST, SignalPacket())
@@ -33,7 +35,11 @@ class PlayerHandler(val server : Ihcore) {
     }
 
     fun onPlayerLeave(player: ServerPlayerEntity) {
-        server.playerManager.saveAllCharacters()
+        val uuid = server.userService.getUserUuid(player.name.string)
+        if (uuid != "Undefined") {
+            server.playerManager.removeCharacter(uuid as String)
+            server.playerManager.saveAllCharacters()
+        }
     }
 
 }

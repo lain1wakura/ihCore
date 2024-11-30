@@ -10,6 +10,7 @@ import org.imperial_hell.ihcore.Characters.System.UserManager
 import org.imperial_hell.ihcore.Characters.System.UserService
 import org.imperial_hell.ihcore.Files.DatabaseManager
 import org.imperial_hell.ihcore.NetworkCore.PlayerHandler
+import org.imperial_hell.ihcore.Sync.PlayerDataStorage
 import org.imperial_hell.ihcore.server.ServerNetworkHandler
 
 class Ihcore : ModInitializer {
@@ -20,7 +21,7 @@ class Ihcore : ModInitializer {
     lateinit var userService: UserService
     lateinit var userManager: UserManager
     lateinit var characterService: CharacterService
-
+    lateinit var playerDataStorage : PlayerDataStorage
     override fun onInitialize() {
         databaseManager = DatabaseManager("mongodb://localhost:27017/", "ihIntegration")
         userService = UserService(databaseManager)
@@ -42,6 +43,10 @@ class Ihcore : ModInitializer {
         ServerLifecycleEvents.SERVER_STOPPING.register(ServerLifecycleEvents.ServerStopping { server ->
             playerManager.saveAllCharacters()
         })
+
+        ServerLifecycleEvents.SERVER_STARTED.register { server ->
+            playerDataStorage = PlayerDataStorage(server)
+        }
 
     }
 }
