@@ -1,5 +1,4 @@
-package org.imperial_hell.ihcore.Characters
-import org.imperial_hell.ihcore.Inventory.SlotContainers
+package org.imperial_hell.ihcore.Model
 
 data class PlayerStyle(
     val name: String,

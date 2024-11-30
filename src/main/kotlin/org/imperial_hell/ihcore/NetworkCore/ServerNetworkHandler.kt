@@ -6,14 +6,10 @@ import org.imperial_hell.ihcore.NetworkCore.Packets.StringPacket
 import org.imperial_hell.ihcore.NetworkCore.PacketsList
 import org.imperial_hell.ihcore.NetworkCore.ServerPacketSender
 import org.imperial_hell.ihcore.Ihcore
-import org.imperial_hell.ihcore.Characters.Character
+import org.imperial_hell.ihcore.Model.Character
 import org.imperial_hell.ihcore.ChatTyping.ServerTypingBroadcaster
 
-class ServerNetworkHandler(val server: Ihcore) {
-
-    val databaseManager = server.databaseManager
-    val playerManager = server.playerManager
-    val jsonReader = server.jsonReader
+class ServerNetworkHandler(val serverCore: Ihcore) {
 
     // Регистрация обработчиков пакетов на сервере
     fun registerServer() {
@@ -24,14 +20,7 @@ class ServerNetworkHandler(val server: Ihcore) {
             packet.setBuffer(buf)
             val uuid = packet.read()
             // Обработка пакета на сервере
-            if (databaseManager.isUuidInDatabase(uuid) == true) {
-                println(player.name.string)
-                databaseManager.updateData("UPDATE minecraft_users SET nickname = ? WHERE uuid = ?", listOf(player.name.string, uuid))
-                val lastCharacterUuid : String = databaseManager.getAllPlayerCharacters(uuid).last()["uuid"] as String
-                val character = playerManager.createCharacterFromDatabase(lastCharacterUuid) as Character
-                playerManager.applyCharacter(player, character)
-            }
-            //TODO("Исключить повторение кода здесь и в SyncCommand")
+            serverCore.userManager.syncPlayer(player, uuid)
         }
 
         ServerPlayNetworking.registerGlobalReceiver(PacketsList.CHAT_TYPING) { server, player, handler, buf, responseSender ->
@@ -39,16 +28,6 @@ class ServerNetworkHandler(val server: Ihcore) {
         }
         ServerPlayNetworking.registerGlobalReceiver(PacketsList.END_TYPING) { server, player, handler, buf, responseSender ->
             ServerTypingBroadcaster.broadcastPlayerEndTyping(player)
-        }
-
-        //TODO("Доделать логику выборки онлайн-игроков")
-        ServerPlayNetworking.registerGlobalReceiver(PacketsList.GIVE_ALL_CHARACTERS) { server, player, handler, buf, responseSender ->
-            databaseManager.reload()
-            val results = databaseManager.getAllFromTable("characters")
-            val characters = CharactersPacket(results)
-            characters.write()
-            characters.apply()
-            ServerPacketSender.send(player, PacketsList.GIVE_ALL_CHARACTERS, characters)
         }
     }
 }

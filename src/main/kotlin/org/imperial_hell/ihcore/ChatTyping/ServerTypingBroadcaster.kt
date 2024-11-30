@@ -34,7 +34,5 @@ object ServerTypingBroadcaster {
         }
         return visiblePlayers
     }
-
-
-
+    
 }

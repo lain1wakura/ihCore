@@ -8,7 +8,7 @@ import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
-import org.imperial_hell.ihcore.Characters.Character
+import org.imperial_hell.ihcore.Model.Character
 import org.imperial_hell.ihcore.Ihcore
 
 class SyncCommand(val server: Ihcore) {
@@ -29,22 +29,12 @@ class SyncCommand(val server: Ihcore) {
         )
     }
 
-
     // Метод для обработки команды
     private fun execute(context: CommandContext<ServerCommandSource>): Int {
         val uuid = StringArgumentType.getString(context, "uuid") // Получаем аргумент "name"
-        val player = context.source.player // Получаем игрока, который выполнил команд
+        val player = context.source.player as ServerPlayerEntity// Получаем игрока, который выполнил команд
 
-        // Обработка пакета на сервере
-        if (server.databaseManager.isUuidInDatabase(uuid) == true) {
-            println(player?.name?.string)
-            server.databaseManager.updateData("UPDATE minecraft_users SET nickname = ? WHERE uuid = ?", listOf(player?.name?.string, uuid))
-            val lastCharacterUuid : String = server.databaseManager.getAllPlayerCharacters(uuid).last()["uuid"] as String
-            val character = server.playerManager.createCharacterFromDatabase(lastCharacterUuid) as Character
-            server.playerManager.applyCharacter(player as ServerPlayerEntity, character)
-            player.sendMessage(Text.of("Успешно синхронизировано"), false) // Отправляем сообщение игроку
-        }
-
+        server.userManager.syncPlayer(player, uuid)
 
         return Command.SINGLE_SUCCESS
     }

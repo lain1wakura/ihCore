@@ -4,25 +4,29 @@ import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import org.imperial_hell.ihcore.Characters.System.Commands.SyncCommand
-import org.imperial_hell.ihcore.Characters.System.PlayerManager
-import org.imperial_hell.ihcore.Characters.System.PlayerNameManager
-import org.imperial_hell.ihcore.NetworkCore.PlayerHandler
+import org.imperial_hell.ihcore.Characters.System.CharacterManager
+import org.imperial_hell.ihcore.Characters.System.CharacterService
+import org.imperial_hell.ihcore.Characters.System.UserManager
+import org.imperial_hell.ihcore.Characters.System.UserService
 import org.imperial_hell.ihcore.Files.DatabaseManager
-import org.imperial_hell.ihcore.Files.JsonReader
+import org.imperial_hell.ihcore.NetworkCore.PlayerHandler
 import org.imperial_hell.ihcore.server.ServerNetworkHandler
 
 class Ihcore : ModInitializer {
 
     lateinit var databaseManager: DatabaseManager
-    lateinit var playerManager : PlayerManager
-    lateinit var jsonReader: JsonReader
+    lateinit var playerManager : CharacterManager
     lateinit var playerHandler: PlayerHandler
-
+    lateinit var userService: UserService
+    lateinit var userManager: UserManager
+    lateinit var characterService: CharacterService
 
     override fun onInitialize() {
-        databaseManager = DatabaseManager(this)
-        playerManager = PlayerManager(this)
-        jsonReader = JsonReader(this)
+        databaseManager = DatabaseManager("mongodb://localhost:27017/", "ihIntegration")
+        userService = UserService(databaseManager)
+        playerManager = CharacterManager(this)
+        userManager = UserManager(this)
+        characterService = CharacterService(databaseManager)
         databaseManager.connect()
         ServerNetworkHandler(this).registerServer()
 
@@ -36,7 +40,7 @@ class Ihcore : ModInitializer {
         }
 
         ServerLifecycleEvents.SERVER_STOPPING.register(ServerLifecycleEvents.ServerStopping { server ->
-            playerManager.saveAllPlayers()
+            playerManager.saveAllCharacters()
         })
 
     }

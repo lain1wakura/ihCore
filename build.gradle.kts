@@ -68,17 +68,24 @@ dependencies {
     implementation("icyllis.modernui:ModernUI-Markdown:3.11.0")
     modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
     modImplementation("net.fabricmc:fabric-language-kotlin:${project.property("kotlin_loader_version")}")
-    //modImplementation("net.fabricmc:fabric-api:${project.property("fabric_version")}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
-    implementation("org.json:json:20231013")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.0")
     implementation("com.fasterxml.jackson.core:jackson-core:2.15.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.0")
     implementation("org.xerial:sqlite-jdbc:3.41.2.2")
-    //compileOnly("org.spongepowered:mixin:0.8.5")
     modImplementation("icyllis.modernui:ModernUI-Fabric:1.20.1-3.11.0.1")
     implementation("com.typesafe:config:1.4.1")
-    //mappings(loom.officialMojangMappings())
+    // KMongo Core (основная библиотека для работы с MongoDB)
+    implementation("org.litote.kmongo:kmongo:4.10.0")
+
+    // KMongo Async (если вам нужны асинхронные операции)
+    implementation("org.litote.kmongo:kmongo-async:4.10.0")
+
+    // KMongo Coroutine (если вы используете корутины для асинхронной работы)
+    implementation("org.litote.kmongo:kmongo-coroutine:4.10.0")
+
+    // MongoDB Driver (включается автоматически, но можно указать явно)
+    implementation("org.mongodb:mongodb-driver-sync:4.10.0")
 }
 
 
