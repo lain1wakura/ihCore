@@ -1,6 +1,7 @@
-package org.imperial_hell.ihcore.NetworkCore
+package org.imperial_hell.ihcore.Networking
 
-import org.imperial_hell.ihcore.NetworkCore.Packets.IhPacket
+import net.minecraft.network.PacketByteBuf
+import org.imperial_hell.ihcore.Networking.Packets.IhPacket
 
 class CharactersPacket(
     val dataList: List<Map<String, Any>> = emptyList(),
@@ -51,30 +52,30 @@ class CharactersPacket(
     }
 
     // Статический метод для создания пакета из буфера
-    override fun read(): List<Map<String, Any>> {
+     override fun readHandle(buffer: PacketByteBuf): List<Map<String, Any>> {
 
-        val size = buf.readInt()  // Считываем количество элементов
+        val size = buffer.readInt()  // Считываем количество элементов
         val dataList = mutableListOf<Map<String, Any>>()
 
         for (i in 0 until size) {
-            if (buf.readableBytes() < 4) {
+            if (buffer.readableBytes() < 4) {
                 throw IllegalStateException("Недостаточно данных для размера карты")
             }
-            val mapSize = buf.readInt()  // Считываем размер карты
+            val mapSize = buffer.readInt()  // Считываем размер карты
             val dataMap = mutableMapOf<String, Any>()
 
             for (j in 0 until mapSize) {
-                if (buf.readableBytes() < 2) {
+                if (buffer.readableBytes() < 2) {
                     throw IllegalStateException("Недостаточно данных для пары ключ-значение")
                 }
-                val key = buf.readString()  // Читаем ключ
-                val type = buf.readByte()   // Читаем тип значения
+                val key = buffer.readString()  // Читаем ключ
+                val type = buffer.readByte()   // Читаем тип значения
                 val value = when (type) {
-                    0.toByte() -> buf.readString()  // Строка
-                    1.toByte() -> buf.readInt()     // Целое число
-                    2.toByte() -> buf.readDouble()  // Дробное число
-                    3.toByte() -> buf.readBoolean() // Логическое значение
-                    4.toByte() -> buf.readLong()    // Длинное число
+                    0.toByte() -> buffer.readString()  // Строка
+                    1.toByte() -> buffer.readInt()     // Целое число
+                    2.toByte() -> buffer.readDouble()  // Дробное число
+                    3.toByte() -> buffer.readBoolean() // Логическое значение
+                    4.toByte() -> buffer.readLong()    // Длинное число
                     else -> throw IllegalArgumentException("Неизвестный тип значения: $type")
                 }
                 dataMap[key] = value

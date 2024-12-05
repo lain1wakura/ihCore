@@ -1,6 +1,7 @@
-package org.imperial_hell.ihcore.NetworkCore.Packets
+package org.imperial_hell.ihcore.Networking.Packets
 
-import org.imperial_hell.ihcore.Skins.SkinManager.Model
+import net.minecraft.network.PacketByteBuf
+import org.imperial_hell.ihcore.Removed.Skins.SkinManager.Model
 
 // Класс пакета для передачи десериализованной текстуры скина
 class SkinPacket(
@@ -17,10 +18,10 @@ class SkinPacket(
     }
 
     // Десериализация данных (чтение из PacketByteBuf)
-    override fun read(): Any? {
-        val name = buf.readString(32767)
-        val skinData = buf.readByteArray()  // Читаем бинарные данные текстуры
-        val model = Model.fromString(buf.readString(32767)) ?: Model.CLASSIC
+    override fun readHandle(buffer: PacketByteBuf): Any {
+        val name = buffer.readString(32767)
+        val skinData = buffer.readByteArray()  // Читаем бинарные данные текстуры
+        val model = Model.fromString(buffer.readString(32767)) ?: Model.CLASSIC
         return SkinPacket(name, skinData, model)  // Возвращаем пакет с прочитанными данными
     }
 

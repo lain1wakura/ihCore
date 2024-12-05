@@ -4,12 +4,10 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.screen.ChatScreen
 import net.minecraft.client.network.AbstractClientPlayerEntity
-import net.minecraft.client.network.ClientPlayerEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.world.World
-import org.imperial_hell.ihcore.NetworkCore.Packets.SignalPacket
-import org.imperial_hell.ihcore.NetworkCore.PacketsList
-import org.imperial_hell.ihcore.client.Network.ClientNetworkHandler
+import org.imperial_hell.ihcore.Networking.Packets.SignalPacket
+import org.imperial_hell.ihcore.Networking.PacketsList
 import org.imperial_hell.ihcore.client.Network.ClientPacketSender
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap

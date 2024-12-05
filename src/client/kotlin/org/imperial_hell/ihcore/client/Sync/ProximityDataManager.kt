@@ -2,10 +2,11 @@ package org.imperial_hell.ihcore.Sync
 
 import net.minecraft.client.network.ClientPlayerEntity
 import net.minecraft.entity.player.PlayerEntity
-import org.imperial_hell.ihcore.NetworkCore.Packets.PlayerDataPacket
-import org.imperial_hell.ihcore.NetworkCore.Packets.StringPacket
-import org.imperial_hell.ihcore.NetworkCore.PacketsList
+import org.imperial_hell.ihcore.Networking.Packets.PlayerDataPacket
+import org.imperial_hell.ihcore.Networking.Packets.StringPacket
+import org.imperial_hell.ihcore.Networking.PacketsList
 import org.imperial_hell.ihcore.client.Network.ClientNetworkHandler
+import org.imperial_hell.ihcore.client.Network.ClientReceiver
 import java.util.UUID
 
 class ProximityDataManager(
@@ -21,7 +22,8 @@ class ProximityDataManager(
      * - Удаляет игроков, которые покинули радиус.
      */
     fun updateProximityData() {
-        val currentNearbyPlayers = findNearbyPlayers().map { it.uuid }.toSet()
+        val currentNearbyPlayers = findNearbyPlayers().map { it.uuid }
+        proximityPlayerDataMap.values.forEach { value -> println(value) }
 
         // Определяем новых игроков
         val newPlayers = currentNearbyPlayers - proximityPlayerDataMap.keys
@@ -83,6 +85,16 @@ class ProximityDataManager(
         } else {
             callback(null)
         }
+    }
+
+    fun registerReceiver() {
+        ClientReceiver<ProximityPlayerData>(PacketsList.PLAYER_DATA) { data, context ->
+            setPlayerData(data)
+        }.register<PlayerDataPacket>()
+    }
+
+    fun setPlayerData(data: ProximityPlayerData) {
+        proximityPlayerDataMap[UUID.fromString(data.playerUuid)] = data
     }
 
     /**

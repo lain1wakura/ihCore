@@ -9,7 +9,7 @@ import org.imperial_hell.ihcore.Characters.System.CharacterService
 import org.imperial_hell.ihcore.Characters.System.UserManager
 import org.imperial_hell.ihcore.Characters.System.UserService
 import org.imperial_hell.ihcore.Files.DatabaseManager
-import org.imperial_hell.ihcore.NetworkCore.PlayerHandler
+import org.imperial_hell.ihcore.Networking.PlayerHandler
 import org.imperial_hell.ihcore.Sync.PlayerDataStorage
 import org.imperial_hell.ihcore.server.ServerNetworkHandler
 

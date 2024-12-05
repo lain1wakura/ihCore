@@ -1,8 +1,6 @@
 package org.imperial_hell.ihcore.Files
 
 import org.litote.kmongo.KMongo
-import org.litote.kmongo.getCollection
-import org.litote.kmongo.eq
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.MongoClient
 import com.mongodb.MongoException
@@ -43,8 +41,7 @@ class DatabaseManager(private val url: String, private val databaseName: String)
 
     fun updateFieldInDocument(document: String, query: Map<String, Any>, field: String, newValue: Any): Boolean {
         return try {
-            val collection = database?.getCollection<Document>(document)
-
+            val collection = database?.getCollection(document)
             // Создаем фильтр для поиска документа
             val filter: Bson = Filters.and(query.map { Filters.eq(it.key, it.value) })
 
@@ -65,7 +62,7 @@ class DatabaseManager(private val url: String, private val databaseName: String)
 
     fun upsertData(document: String, query: Map<String, Any>, update: Map<String, Any>): Boolean {
         return try {
-            val collection = database?.getCollection<Document>(document)
+            val collection = database?.getCollection(document)
             val filter: Bson = Filters.and(query.map { Filters.eq(it.key, it.value) })
             val updateDocument = Document("\$set", Document(update))
             val options = UpdateOptions().upsert(true)
@@ -84,7 +81,7 @@ class DatabaseManager(private val url: String, private val databaseName: String)
      */
     fun insertData(document: String, data: Map<String, Any>, comment: String = ""): String? {
         return try {
-            val collection = database?.getCollection<Document>(document)
+            val collection = database?.getCollection(document)
             val result = collection?.insertOne(Document(data))
             println("Данные успешно добавлены. ID: ${result?.insertedId}")
             result?.insertedId?.asObjectId()?.value?.toHexString()
@@ -99,7 +96,7 @@ class DatabaseManager(private val url: String, private val databaseName: String)
      */
     fun updateData(document: String, query: Map<String, Any>, update: Map<String, Any>, comment: String = ""): Boolean {
         return try {
-            val collection = database?.getCollection<Document>(document)
+            val collection = database?.getCollection(document)
             val filter: Bson = Filters.and(query.map { Filters.eq(it.key, it.value) })
             val result = collection?.updateOne(
                 filter,
@@ -118,7 +115,7 @@ class DatabaseManager(private val url: String, private val databaseName: String)
      */
     fun deleteData(document: String, query: Map<String, Any>, comment: String = ""): Boolean {
         return try {
-            val collection = database?.getCollection<Document>(document)
+            val collection = database?.getCollection(document)
             val filter: Bson = Filters.and(query.map { Filters.eq(it.key, it.value) })
             val result = collection?.deleteOne(filter)
             println("Удалено ${result?.deletedCount} документов.")
@@ -134,7 +131,7 @@ class DatabaseManager(private val url: String, private val databaseName: String)
      */
     fun fetchAll(document: String, query: Map<String, Any>): List<Document> {
         return try {
-            val collection = database?.getCollection<Document>(document)
+            val collection = database?.getCollection(document)
             val filter: Bson = Filters.and(query.map { Filters.eq(it.key, it.value) })
             collection?.find(filter)?.toList() ?: emptyList()
         } catch (e: MongoException) {
@@ -148,7 +145,7 @@ class DatabaseManager(private val url: String, private val databaseName: String)
      */
     fun fetchOne(document: String, query: Map<String, Any>): Document? {
         return try {
-            val collection = database?.getCollection<Document>(document)
+            val collection = database?.getCollection(document)
             val filter: Bson = Filters.and(query.map { Filters.eq(it.key, it.value) })
             collection?.find(filter)?.firstOrNull()
         } catch (e: MongoException) {

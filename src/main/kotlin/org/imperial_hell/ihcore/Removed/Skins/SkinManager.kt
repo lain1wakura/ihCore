@@ -1,4 +1,4 @@
-package org.imperial_hell.ihcore.Skins
+package org.imperial_hell.ihcore.Removed.Skins
 import org.imperial_hell.ihcore.Files.IhConfig
 import java.io.FileOutputStream
 import java.net.URI

@@ -1,3 +1,4 @@
+import org.gradle.api.artifacts.ConfigurationContainer
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.api.tasks.JavaExec
@@ -75,20 +76,27 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:3.41.2.2")
     modImplementation("icyllis.modernui:ModernUI-Fabric:1.20.1-3.11.0.1")
     implementation("com.typesafe:config:1.4.1")
+    //implementation("org.litote.kmongo:kmongo-async:4.10.0")
+    include(implementation("org.mongodb:mongodb-driver-sync:5.2.1")!!)
+    include(implementation("org.mongodb:mongodb-driver-core:5.2.1")!!)
+    include(implementation("org.mongodb:bson:5.2.1")!!)
+    include(implementation("org.mongodb:bson-record-codec:5.2.1")!!)
+    include(implementation("com.fasterxml.jackson.core:jackson-databind:2.17.1")!!)
+    include(implementation("com.fasterxml.jackson.core:jackson-core:2.17.1")!!)
+    include(implementation("com.fasterxml.jackson.core:jackson-annotations:2.17.1")!!)
+    include(implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.1")!!)
     // KMongo Core (основная библиотека для работы с MongoDB)
-    implementation("org.litote.kmongo:kmongo:4.10.0")
-
-    // KMongo Async (если вам нужны асинхронные операции)
-    implementation("org.litote.kmongo:kmongo-async:4.10.0")
-
-    // KMongo Coroutine (если вы используете корутины для асинхронной работы)
-    implementation("org.litote.kmongo:kmongo-coroutine:4.10.0")
-
-    // MongoDB Driver (включается автоматически, но можно указать явно)
-    implementation("org.mongodb:mongodb-driver-sync:4.10.0")
+    //include(implementation("org.litote.kmongo:kmongo:5.1.0")!!)
+    include(implementation("org.litote.kmongo:kmongo-core:5.1.0")!!)
+    include(implementation("org.litote.jackson:jackson-module-loader:0.4.0")!!)
+    include(implementation("org.litote.kmongo:kmongo-data:5.1.0")!!)
+    include(implementation("org.litote.kmongo:kmongo-id:5.1.0")!!)
+    include(implementation("org.litote.kmongo:kmongo-id-jackson:5.1.0")!!)
+    include(implementation("org.litote.kmongo:kmongo-jackson-mapping:5.1.0")!!)
+    include(implementation("org.litote.kmongo:kmongo-property:5.1.0")!!)
+    include(implementation("org.litote.kmongo:kmongo-shared:5.1.0")!!)
+    include(implementation("de.undercouch:bson4jackson:2.15.1")!!)
 }
-
-
 
 tasks.processResources {
     inputs.property("version", project.version)
@@ -116,7 +124,7 @@ tasks.withType<KotlinCompile>().configureEach {
 }
 
 tasks.jar {
-    // Включение LICENSE в JAR
+    // Включение лицензионного файла в JAR
     from("LICENSE") {
         rename { "${it}_${project.base.archivesName}" }
     }

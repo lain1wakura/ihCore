@@ -3,6 +3,7 @@ import net.minecraft.server.network.ServerPlayerEntity
 import org.imperial_hell.ihcore.Model.Character
 
 import org.imperial_hell.ihcore.Ihcore
+import org.imperial_hell.ihcore.Removed.PlayerNameManager
 
 class CharacterManager(private val server: Ihcore) {
     private val characterCache: MutableMap<String, Character> = mutableMapOf() // Используем UUID игрока как ключ

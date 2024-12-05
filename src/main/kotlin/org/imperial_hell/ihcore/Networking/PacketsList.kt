@@ -1,4 +1,4 @@
-package org.imperial_hell.ihcore.NetworkCore
+package org.imperial_hell.ihcore.Networking
 import net.minecraft.util.Identifier
 
 object PacketsList {

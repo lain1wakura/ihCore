@@ -1,9 +1,8 @@
 package org.imperial_hell.ihcore.Sync
 
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.network.ServerPlayerEntity
 import java.util.UUID
-import org.imperial_hell.ihcore.NetworkCore.Packets.PlayerDataPacket
+import org.imperial_hell.ihcore.Networking.Packets.PlayerDataPacket
 
 class PlayerDataStorage(val server: MinecraftServer) {
 
@@ -19,6 +18,7 @@ class PlayerDataStorage(val server: MinecraftServer) {
     fun updatePlayerData(playerUuid: UUID, newData: ProximityPlayerData) {
         // Если данные игрока существуют, обновляем их, если нет — создаём новые
         proximityPlayerDataMap[playerUuid] = newData
+        println("Добавлен игрок с UUID ${playerUuid.toString()} | $proximityPlayerDataMap")
 
         // После изменения данных отправляем их через PlayerDataBroadcaster
         sendPlayerDataUpdate(playerUuid, newData)
@@ -43,13 +43,14 @@ class PlayerDataStorage(val server: MinecraftServer) {
         // Создаем пакет для отправки данных игрока
         val playerDataPacket = PlayerDataPacket(newData)
         val player = server.playerManager.getPlayer(uuid)
+        println("Поиск по UUID $uuid | $proximityPlayerDataMap")
 
         if (player != null) {
             // Игрок найден, можно безопасно привести к ServerPlayerEntity
             PlayerDataBroadcaster.localBroadcast(player, playerDataPacket)
         } else {
             // Игрок не найден, возможно, он еще не подключился или вышел
-            println("Игрок с UUID $uuid не найден на сервере.")
+            println("Игрок с UUID $uuid не найден на сервере. | $proximityPlayerDataMap")
         }
     }
 }

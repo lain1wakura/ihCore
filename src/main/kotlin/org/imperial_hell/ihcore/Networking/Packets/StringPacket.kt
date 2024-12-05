@@ -1,4 +1,6 @@
-package org.imperial_hell.ihcore.NetworkCore.Packets
+package org.imperial_hell.ihcore.Networking.Packets
+
+import net.minecraft.network.PacketByteBuf
 
 // Абстрактный класс для пакетов с сообщениями
 class StringPacket(
@@ -10,7 +12,7 @@ class StringPacket(
         buf.writeString(message)
     }
 
-    override fun read(): String { return buf.readString() }
+    override fun readHandle(buffer: PacketByteBuf): String { return buffer.readString() }
 
     override fun apply() {}
 }

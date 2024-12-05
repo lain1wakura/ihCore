@@ -1,10 +1,12 @@
-package org.imperial_hell.ihcore.NetworkCore.Packets
+package org.imperial_hell.ihcore.Networking.Packets
 
+import net.minecraft.network.PacketByteBuf
+import org.imperial_hell.ihSystems.IhLogger
 import org.imperial_hell.ihcore.Sync.ProximityPlayerData
 
 // Класс пакета для передачи данных игрока (PlayerData)
 class PlayerDataPacket(
-    val proximityPlayerData: ProximityPlayerData
+    val proximityPlayerData: ProximityPlayerData = ProximityPlayerData.getBlankPlayerData("")
 ) : IhPacket() {
 
     // Сериализация данных (запись в PacketByteBuf)
@@ -25,29 +27,27 @@ class PlayerDataPacket(
     }
 
     // Десериализация данных (чтение из PacketByteBuf)
-    override fun read(): Any? {
-        val playerUuid = buf.readString(32767)
+    override fun readHandle(buffer: PacketByteBuf): ProximityPlayerData {
+        val playerUuid = buffer.readString(32767)
 
-        val state = ProximityPlayerData.State.valueOf(buf.readString(32767))  // Читаем состояние (AFK или TYPING)
+        val state = ProximityPlayerData.State.valueOf(buffer.readString(32767))  // Читаем состояние (AFK или TYPING)
 
         // Чтение прогресса набора текста
-        val messageTypingProgress = buf.readString(32767)
+        val messageTypingProgress = buffer.readString(32767)
 
         // Чтение уникального идентификатора персонажа
-        val characterUuid = buf.readString(32767)
+        val characterUuid = buffer.readString(32767)
 
         // Чтение описания внешности
-        val appearanceDesc = buf.readString(32767)
+        val appearanceDesc = buffer.readString(32767)
 
         // Возвращаем новый объект PlayerDataPacket с прочитанными данными
-        return PlayerDataPacket(
-            ProximityPlayerData(
-                playerUuid,
-                state,
-                messageTypingProgress,
-                characterUuid,
-                appearanceDesc
-            )
+        return ProximityPlayerData(
+            playerUuid,
+            state,
+            messageTypingProgress,
+            characterUuid,
+            appearanceDesc
         )
     }
 

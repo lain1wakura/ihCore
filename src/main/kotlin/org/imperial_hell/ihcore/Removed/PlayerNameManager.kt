@@ -1,4 +1,4 @@
-package org.imperial_hell.ihcore.Characters.System
+package org.imperial_hell.ihcore.Removed
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
 import net.minecraft.text.MutableText

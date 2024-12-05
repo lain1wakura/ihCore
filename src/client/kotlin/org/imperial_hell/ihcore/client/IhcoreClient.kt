@@ -25,14 +25,15 @@ class IhcoreClient : ClientModInitializer {
         var screenOpened = false
          ClientTickEvents.END_CLIENT_TICK.register { client ->
             if (client.world != null && !screenOpened) {
-                // Проверка, что мир загружен и экран еще не был открыт
                 screenOpened = true
+
                 proximityDataManager = ProximityDataManager(MinecraftClient.getInstance().player as ClientPlayerEntity)
-                //MinecraftClient.getInstance().setScreen(SyncMenu())  // Открытие экрана
-                    if (timer.hasReached()) {
-                        // Ваш код, который нужно вызывать с указанным интервалом
-                        proximityDataManager.updateProximityData()
-                    }
+                if (timer.hasReached()) {
+                    // Ваш код, который нужно вызывать с указанным интервалом
+                    proximityDataManager.updateProximityData()
+                }
+
+                proximityDataManager.registerReceiver()
             }
         }
 

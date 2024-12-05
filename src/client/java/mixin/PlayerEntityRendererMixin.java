@@ -64,8 +64,6 @@ public abstract class PlayerEntityRendererMixin {
         float animationProgress = Math.min(elapsedTime / 450.0f, 1.0f);
         float elapsedDotTime = currentTime - dotCycle;
         float dotProgress = Math.min(elapsedDotTime / 600.0f, 1.0f);
-        System.out.println(dotProgress);
-
         if (dotProgress == 1) {
             IhcoreClient.Companion.getTypingMessageManager().updateDotCycle();
         }

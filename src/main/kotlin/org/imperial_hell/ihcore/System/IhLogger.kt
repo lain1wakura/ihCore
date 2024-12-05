@@ -1,62 +1,44 @@
-/*
 package org.imperial_hell.ihSystems
 
-import net.minecraft.server.MinecraftServer
-import net.minecraft.text.Text
-import net.minecraft.text.Text.literal
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.text.TextColor
-import java.text.ListFormat.Style
+import org.imperial_hell.ihcore.System.ConsoleColors
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
-object IhLogger() {
-
+object IhLogger {
+    private val logger: Logger = LoggerFactory.getLogger("IhLogger")
     var debug: Boolean = true // Флаг для включения/выключения логирования
 
-    // Метод для отправки информационного сообщения
-    fun info(message: String) {
-        if (debug) {
-            // Преобразуем строку с кодами цвета в цветной текст
-            val coloredMessage = message.replace('&', '§')  // Для совместимости с кодами цвета Spigot
+    /**
+     * Логирование сообщения с заданным типом.
+     * @param message Сообщение для логирования.
+     * @param type Тип сообщения (INFO, WARN, ERROR, SUCCESS).
+     * @param debugMode Если true, сообщение будет логироваться только в режиме отладки.
+     */
+    fun log(message: String, type: MessageType = MessageType.INFO, debugMode: Boolean = true) {
+        // Если debugMode активен и debug = false, не логируем сообщение
+        if (debugMode && !debug) return
 
-            // Создаем объект Text
-            val component = literal(coloredMessage).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xFFFFFF)))
+        // Форматируем текст: текст в << >> выделяется синим цветом
+        val formattedMessage = formatMessage(message)
 
-            // Отправляем сообщение в консоль
-            sendToConsole(component)
+        // В зависимости от типа сообщения выбираем действие
+        when (type) {
+            MessageType.INFO -> logger.info(formattedMessage)
+            MessageType.WARN -> logger.warn(formattedMessage)
+            MessageType.ERROR -> logger.error(formattedMessage)
+            MessageType.SUCCESS -> logger.info("${ConsoleColors.GREEN} + $formattedMessage") // Для успеха используем INFO
         }
     }
 
-    // Метод для отправки предупреждающего сообщения
-    fun warn(message: String) {
-        if (debug) {
-            // Строим компонент с желтым цветом
-            val component = literal(message).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xFFFF00)))
+    private fun formatMessage(message: String): String {
 
-            // Отправляем сообщение в консоль
-            sendToConsole(component)
+        val regex = Regex("""<<(.*?)>>""") // Регулярное выражение для поиска текста в (( ))
+        return regex.replace(message) { matchResult ->
+            "${ConsoleColors.BLUE}${matchResult.groupValues[1]}${ConsoleColors.RESET}" // Заменяем найденный текст на синий
         }
     }
 
-    // Метод для отправки сообщения об ошибке
-    fun error(message: String) {
-        if (debug) {
-            // Строим компонент с красным цветом
-            val component = literal(message).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xFF0000)))
-
-            // Отправляем сообщение в консоль
-            sendToConsole(component)
-        }
-    }
-
-    // Метод для отправки сообщения об успехе
-    fun success(message: String) {
-        if (debug) {
-            // Строим компонент с зеленым цветом
-            val component = literal(message).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0x00FF00)))
-
-            // Отправляем сообщение в консоль
-            sendToConsole(component)
-        }
+    enum class MessageType {
+        INFO, WARN, ERROR, SUCCESS
     }
 }
-*/
