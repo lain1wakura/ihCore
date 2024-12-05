@@ -33,7 +33,7 @@ class ServerNetworkHandler(val serverCore: Ihcore) {
         // Используем Receiver для обработки пакета CHAT_TYPING
         ServerReceiver<Signal>(PacketsList.CHAT_TYPING) { data, context ->
             serverCore.playerDataStorage.updatePlayerDataAttribute(context.player.uuid) { currentData ->
-                currentData.copy(state = ProximityPlayerData.State.TYPING)
+                currentData.copy(state = ProximityPlayerData.State.TYPING_REPLICA)
             }
         }.register<SignalPacket>()
 

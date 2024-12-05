@@ -1,7 +1,9 @@
 package org.imperial_hell.ihcore.Sync
 
+import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import net.minecraft.client.network.ClientPlayerEntity
 import net.minecraft.entity.player.PlayerEntity
+import org.imperial_hell.ihSystems.IhLogger
 import org.imperial_hell.ihcore.Networking.Packets.PlayerDataPacket
 import org.imperial_hell.ihcore.Networking.Packets.StringPacket
 import org.imperial_hell.ihcore.Networking.PacketsList
@@ -36,6 +38,8 @@ class ProximityDataManager(
         for (uuid in removedPlayers) {
             onPlayerExitRadius(uuid)
         }
+
+        IhLogger.log("$proximityPlayerDataMap", debugMode = true)
     }
 
     /**

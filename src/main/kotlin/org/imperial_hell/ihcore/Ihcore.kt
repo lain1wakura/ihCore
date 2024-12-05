@@ -3,6 +3,7 @@ package org.imperial_hell.ihcore
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
+import org.imperial_hell.ihSystems.IhLogger
 import org.imperial_hell.ihcore.Characters.System.Commands.SyncCommand
 import org.imperial_hell.ihcore.Characters.System.CharacterManager
 import org.imperial_hell.ihcore.Characters.System.CharacterService
@@ -22,13 +23,16 @@ class Ihcore : ModInitializer {
     lateinit var userManager: UserManager
     lateinit var characterService: CharacterService
     lateinit var playerDataStorage : PlayerDataStorage
+
+    var connectionState = false
+
     override fun onInitialize() {
-        databaseManager = DatabaseManager("mongodb://localhost:27017/", "ihIntegration")
+        databaseManager = DatabaseManager("mongodb://5.9.189.53:27017/", "qbblocks")
         userService = UserService(databaseManager)
         playerManager = CharacterManager(this)
         userManager = UserManager(this)
         characterService = CharacterService(databaseManager)
-        databaseManager.connect()
+        connectionState = databaseManager.connect()
         ServerNetworkHandler(this).registerServer()
 
         playerHandler = PlayerHandler(this)
@@ -46,6 +50,30 @@ class Ihcore : ModInitializer {
 
         ServerLifecycleEvents.SERVER_STARTED.register { server ->
             playerDataStorage = PlayerDataStorage(server)
+            state_block()
+        }
+
+    }
+
+    fun state_block() {
+        val asciiArt = """
+            
+         ██████╗ ██████╗ ███████╗██╗   ██╗███╗   ██╗ ██████╗
+        ██╔═══██╗██╔══██╗██╔════╝╚██╗ ██╔╝████╗  ██║██╔════╝
+        ██║   ██║██████╔╝███████╗ ╚████╔╝ ██╔██╗ ██║██║     
+        ██║▄▄ ██║██╔══██╗╚════██║  ╚██╔╝  ██║╚██╗██║██║     
+        ╚██████╔╝██████╔╝███████║   ██║   ██║ ╚████║╚██████╗
+         ╚══▀▀═╝ ╚═════╝ ╚══════╝   ╚═╝   ╚═╝  ╚═══╝ ╚═════╝                            
+        """.trimIndent()
+
+        asciiArt.lines().forEach { line ->
+            IhLogger.log("<<$line>>")
+        }
+
+        if (connectionState) {
+            IhLogger.log("+ Подключение к базе данных ${databaseManager.db?.name} успешно.", IhLogger.MessageType.SUCCESS)
+        } else {
+            IhLogger.log("- Ошибка при подключении к базе данных ${databaseManager.db?.name}: ${databaseManager.error}", IhLogger.MessageType.ERROR)
         }
 
     }

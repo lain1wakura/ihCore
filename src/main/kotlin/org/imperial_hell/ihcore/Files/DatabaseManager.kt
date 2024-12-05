@@ -1,5 +1,6 @@
 package org.imperial_hell.ihcore.Files
 
+import com.mongodb.MongoClientException
 import org.litote.kmongo.KMongo
 import com.mongodb.client.MongoDatabase
 import com.mongodb.client.MongoClient
@@ -8,23 +9,24 @@ import org.bson.Document
 import org.bson.conversions.Bson
 import com.mongodb.client.model.Filters
 import com.mongodb.client.model.UpdateOptions
-
 class DatabaseManager(private val url: String, private val databaseName: String) {
 
     private var client: MongoClient? = null
     private var database: MongoDatabase? = null
+    var error = ""
 
     /**
      * Подключение к базе данных.
      */
-    fun connect() {
+    fun connect(): Boolean {
         try {
             client = KMongo.createClient(url)
             database = client?.getDatabase(databaseName)
-            println("Подключение к базе данных $databaseName установлено.")
+            return true
         } catch (e: MongoException) {
-            println("Ошибка подключения к базе данных: ${e.message}")
+            error = e.message ?: ""
         }
+        return false
     }
 
     /**

@@ -6,20 +6,13 @@ import net.minecraft.client.MinecraftClient
 import net.minecraft.client.network.ClientPlayerEntity
 import org.imperial_hell.ihcore.Sync.ProximityDataManager
 import org.imperial_hell.ihcore.Utils.IhTimer
-
-import org.imperial_hell.ihcore.client.Messages.TypingMessageManager
 import org.imperial_hell.ihcore.client.Network.ClientNetworkHandler
 
 class IhcoreClient : ClientModInitializer {
 
     var timer: IhTimer = IhTimer(20)
-
-    lateinit var proximityDataManager: ProximityDataManager
-
     override fun onInitializeClient() {
         ClientNetworkHandler.registerClient()
-
-        typingMessageManager.registerTypingEvents()
 
         // Регистрация события ClientTick, которое будет срабатывать на каждом тике
         var screenOpened = false
@@ -40,6 +33,6 @@ class IhcoreClient : ClientModInitializer {
     }
 
     companion object {
-        var typingMessageManager: TypingMessageManager = TypingMessageManager()
+        lateinit var proximityDataManager: ProximityDataManager
     }
 }

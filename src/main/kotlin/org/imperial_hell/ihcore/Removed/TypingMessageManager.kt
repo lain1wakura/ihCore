@@ -1,9 +1,7 @@
-package org.imperial_hell.ihcore.client.Messages
+/*
+package org.imperial_hell.ihcore.Removed
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.screen.ChatScreen
-import net.minecraft.client.network.AbstractClientPlayerEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.world.World
 import org.imperial_hell.ihcore.Networking.Packets.SignalPacket
@@ -14,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 class TypingMessageManager {
 
-    private var typingPlayers : MutableMap<UUID, AbstractClientPlayerEntity> = mutableMapOf()
+    private var typingPlayers : MutableMap<UUID, net.minecraft.client.network.AbstractClientPlayerEntity> = mutableMapOf()
 
     private data class HeadRotation(val yaw: Float, val pitch: Float)
     private val previousRotations = ConcurrentHashMap<PlayerEntity, HeadRotation>()
@@ -57,7 +55,7 @@ class TypingMessageManager {
         return typingStartTimes[playerUuid] ?: System.currentTimeMillis()
     }
 
-    fun updateTypingPlayers(players: List<AbstractClientPlayerEntity>) {
+    fun updateTypingPlayers(players: List<net.minecraft.client.network.AbstractClientPlayerEntity>) {
         typingPlayers.clear()
         for (player in players) {
             typingPlayers[player.uuid] = player
@@ -65,8 +63,8 @@ class TypingMessageManager {
     }
 
     fun addTypingPlayer(uuid: UUID) {
-        val world: World = MinecraftClient.getInstance().world as World
-        val player = world.getPlayers().firstOrNull { it.uuid == uuid } as AbstractClientPlayerEntity
+        val world: World = net.minecraft.client.MinecraftClient.getInstance().world as World
+        val player = world.getPlayers().firstOrNull { it.uuid == uuid } as net.minecraft.client.network.AbstractClientPlayerEntity
         println("Добавлен игрок: ${player.uuid}. Размер массива: ${typingPlayers.size}, ${typingPlayers.values}")
         typingPlayers.put(uuid, player)
         startTyping(uuid)
@@ -85,16 +83,16 @@ class TypingMessageManager {
     }
 
     fun registerTypingEvents() {
-        ClientTickEvents.END_CLIENT_TICK.register(ClientTickEvents.EndTick { client ->
+        net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.END_CLIENT_TICK.register(net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.EndTick { client ->
             onClientTick(client)
         })
     }
 
     // Метод, вызываемый на каждом тике клиента
-    private fun onClientTick(client: MinecraftClient) {
+    private fun onClientTick(client: net.minecraft.client.MinecraftClient) {
 
         if (chatFlag && !isChatOpen()) {
-            ClientPacketSender.send(PacketsList.END_TYPING, SignalPacket())
+            org.imperial_hell.ihcore.client.Network.ClientPacketSender.send(PacketsList.END_TYPING, SignalPacket())
             chatFlag = true
         } else {
             chatFlag = false
@@ -102,9 +100,9 @@ class TypingMessageManager {
     }
 
     private fun isChatOpen(): Boolean {
-        val client = MinecraftClient.getInstance()
+        val client = net.minecraft.client.MinecraftClient.getInstance()
         // Проверяем, если текущее окно является экземпляром ChatScreen
-        return client.currentScreen is ChatScreen
+        return client.currentScreen is net.minecraft.client.gui.screen.ChatScreen
     }
 
     // Проверка изменения ориентации головы игрока
@@ -132,4 +130,4 @@ class TypingMessageManager {
         }
     }
 
-}
+}*/

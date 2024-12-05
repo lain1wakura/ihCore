@@ -10,7 +10,9 @@ data class ProximityPlayerData(
 
     enum class State {
         AFK,
-        TYPING,
+        TYPING_REPLICA,
+        TYPING_COMMAND,
+        TYPING_NRP,
         NONE
     }
 

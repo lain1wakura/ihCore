@@ -1,6 +1,5 @@
-package mixin;
+/*package mixin;
 
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -9,8 +8,8 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import org.imperial_hell.ihcore.Sync.ProximityPlayerData;
 import org.imperial_hell.ihcore.client.IhcoreClient;
-import org.imperial_hell.ihcore.client.Messages.TypingMessageManager;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -41,7 +40,7 @@ public abstract class PlayerEntityRendererMixin {
             CallbackInfo callbackInfo
     ) {
         // Получаем текущее состояние — печатает игрок или нет
-        boolean isTyping = IhcoreClient.Companion.getTypingMessageManager().isTyping(player.getUuid());
+        boolean isTyping = IhcoreClient.Companion.getProximityDataManager().getPlayerData(player.getUuid()).getState() == ProximityPlayerData.State.TYPING_COMMAND;
 
         // Время начала и конца набора
         long startTime = IhcoreClient.Companion.getTypingMessageManager().getStartTime(player.getUuid());
@@ -134,4 +133,4 @@ public abstract class PlayerEntityRendererMixin {
         callbackInfo.cancel();
     }
 
-}
+}*/

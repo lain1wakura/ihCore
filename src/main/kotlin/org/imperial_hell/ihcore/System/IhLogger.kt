@@ -26,7 +26,7 @@ object IhLogger {
             MessageType.INFO -> logger.info(formattedMessage)
             MessageType.WARN -> logger.warn(formattedMessage)
             MessageType.ERROR -> logger.error(formattedMessage)
-            MessageType.SUCCESS -> logger.info("${ConsoleColors.GREEN} + $formattedMessage") // Для успеха используем INFO
+            MessageType.SUCCESS -> logger.info("${ConsoleColors.GREEN}$formattedMessage") // Для успеха используем INFO
         }
     }
 

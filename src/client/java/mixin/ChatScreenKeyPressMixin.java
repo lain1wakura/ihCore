@@ -6,6 +6,7 @@ import org.imperial_hell.ihcore.Networking.Packets.SignalPacket;
 import org.imperial_hell.ihcore.Networking.PacketsList;
 import org.imperial_hell.ihcore.client.Network.ClientPacketSender;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -16,6 +17,7 @@ import java.util.Set;
 public abstract class ChatScreenKeyPressMixin {
 
     // Флаг для отслеживания, был ли уже отправлен сигнал на первом нажатии клавиши
+    @Unique
     private boolean hasSentSignal = false;
 
     // Перехватываем метод обработки нажатий клавиш
