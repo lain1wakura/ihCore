@@ -9,6 +9,7 @@ import org.imperial_hell.common.Packets.PlayerDataPacket
 import org.imperial_hell.common.Packets.StringPacket
 import org.imperial_hell.common.PacketsList
 import org.imperial_hell.common.Proxy.ProximityPlayerData
+import org.imperial_hell.qbrp.Utils.qbTimer
 import org.imperial_hell.qbrp.client.Network.ClientNetworkHandler.responseRequest
 import org.imperial_hell.qbrp.client.Network.ClientReceiver
 import java.util.UUID
@@ -20,6 +21,7 @@ class ProximityDataManager(
     // Локальное хранилище данных игроков в радиусе
     private val proximityPlayerDataMap: MutableMap<UUID, ProximityPlayerData> = mutableMapOf()
     private val blockDataMap: MutableMap<BlockPos, qbBlock> = mutableMapOf()
+    private val proxyUpdateCycle = qbTimer(20) { updateProximityData() }.start()
 
     /**
      * Обновляет состояние игроков в радиусе:

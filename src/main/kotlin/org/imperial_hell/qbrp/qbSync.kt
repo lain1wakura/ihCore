@@ -31,11 +31,9 @@ import org.imperial_hell.qbrp.Sync.PlayerDataManager
 import org.imperial_hell.qbrp.Sync.ResourceInstruments
 import org.imperial_hell.qbrp.Sync.ResourcePackBaker
 import org.imperial_hell.common.Utils.ConsoleColors
+import org.imperial_hell.common.Utils.TimerUpdater
 import org.imperial_hell.qbrp.client.Items.qbItem
 import org.imperial_hell.qbrp.server.ServerNetworkHandler
-
-//@SpringBootApplication
-//class DemoApplication
 
 class qbSync : ModInitializer {
 
@@ -52,14 +50,17 @@ class qbSync : ModInitializer {
     override fun onInitialize() {
         // Запуск ResourceServer в корутине
         if (FabricLoader.getInstance().environmentType == EnvType.SERVER) {
+
             GlobalScope.launch {
                 runResourceServer()
             }
+
             ResourcePackBaker.process(IhConfig.SERVER_PACK_CONTENT_PATH, IhConfig.SERVER_ITEM)
             initDatabase()
             registerServerLifecycle()
         }
         registerQbItem()
+        TimerUpdater.registerCycle()
     }
 
     private suspend fun runResourceServer() {
@@ -110,10 +111,9 @@ class qbSync : ModInitializer {
     }
 
     fun init(server: MinecraftServer) {
+        val userService = UserService(characterDatabaseManager)
         playerDataManager = PlayerDataManager(server)
-        val userservice = UserService(characterDatabaseManager)
-        userManager = UserManager(userservice, CharacterManager(userservice), playerDataManager)
-
+        userManager = UserManager(userService, CharacterManager(userService), playerDataManager)
         blockDataManager = BlockDataManager(qbBlocksService(blockDatabaseManager))
 
         registerCommands(server.commandManager.dispatcher)

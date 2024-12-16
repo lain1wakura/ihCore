@@ -17,12 +17,13 @@ class ChuckHandler(val blocksManager: BlockDataManager) {
         ServerChunkEvents.CHUNK_LOAD.register { world: World, chunk: Chunk ->
             IhLogger.log("<<-    ЗАГРУЗКА ЧАНКА    ->>")
             IhLogger.log("<<-    ${chunk.pos}    ->>")
-            onChunkLoad(world, chunk)
+            loadChunk(world, chunk)
+            ChunkUnloader(world, chunk, this)
         }
         ServerChunkEvents.CHUNK_UNLOAD.register { world: World, chunk: Chunk ->
-            IhLogger.log("<<-    ВЫГРУЗКА ЧАНКА    ->>")
-            IhLogger.log("<<-    ${chunk.pos}    ->>")
-            onChunkUnload(chunk)
+            //IhLogger.log("<<-    ВЫГРУЗКА ЧАНКА    ->>")
+            //IhLogger.log("<<-    ${chunk.pos}    ->>")
+            //unloadChunk(chunk)
         }
         PlayerBlockBreakEvents.AFTER.register(PlayerBlockBreakEvents.After { world, player, pos, state, blockEntity ->
             onBlockBreak(world, player, pos, state)
@@ -35,7 +36,7 @@ class ChuckHandler(val blocksManager: BlockDataManager) {
         }
     }
 
-    fun onChunkLoad(world: World, chunk: Chunk) {
+    fun loadChunk(world: World, chunk: Chunk) {
         CompletableFuture.runAsync {
             getDataBlocks(world, chunk).forEach { data ->
                 blocksManager.add(data.first, data.second)
@@ -46,8 +47,10 @@ class ChuckHandler(val blocksManager: BlockDataManager) {
         }
     }
 
-    fun onChunkUnload(chunk: Chunk) {
+    fun unloadChunk(chunk: Chunk) {
         CompletableFuture.runAsync {
+            IhLogger.log("<<-    ВЫГРУЗКА ЧАНКА    ->>")
+            IhLogger.log("<<-    ${chunk.pos}    ->>")
             val (start, end) = getChunkBounds(chunk)
             blocksManager.removeBlocksInRange(start, end)
         }.exceptionally { ex ->

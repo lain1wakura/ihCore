@@ -1,6 +1,9 @@
 package org.imperial_hell.qbrp.Utils
 
-class IhTimer(private val interval: Int) {
+import org.imperial_hell.common.Utils.TimerUpdater
+import org.imperial_hell.ihSystems.IhLogger
+
+class qbTimer(private val interval: Int, private val callback: () -> Unit) {
     private var tickCounter = 0
 
     /**
@@ -9,12 +12,28 @@ class IhTimer(private val interval: Int) {
      * @return true, если интервал достигнут, иначе false
      */
     fun hasReached(): Boolean {
+        return tickCounter >= interval
+    }
+
+    fun destroy() {
+        TimerUpdater.timers.remove(this)
+    }
+
+    fun start(): qbTimer {
+        if (this in TimerUpdater.timers) {
+            IhLogger.log("Попытка запустить таймер не удалась: уже запущен.", IhLogger.MessageType.WARN)
+        } else {
+            TimerUpdater.timers.add(this)
+        }
+        return this
+    }
+
+    fun update() {
         tickCounter++
         if (tickCounter >= interval) {
             tickCounter = 0
-            return true
+            callback()
         }
-        return false
     }
 
     /**

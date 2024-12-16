@@ -12,15 +12,13 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import org.imperial_hell.qbrp.Sync.IconManager
 import org.imperial_hell.qbrp.Sync.ProximityDataManager
-import org.imperial_hell.qbrp.Utils.IhTimer
+import org.imperial_hell.qbrp.Utils.qbTimer
 import org.imperial_hell.common.Blocks.BlockData.Overlays.Overlay
 import org.imperial_hell.qbrp.client.Game.OverlayManager
 import org.imperial_hell.qbrp.client.Network.ClientNetworkHandler
 import org.imperial_hell.qbrp.client.Sync.ResourceLoader
 
 class qbrpClient : ClientModInitializer {
-
-    private var timer: IhTimer = IhTimer(20)
 
     override fun onInitializeClient() {
         ClientNetworkHandler.registerClient()
@@ -36,11 +34,6 @@ class qbrpClient : ClientModInitializer {
                     proximityDataManager = ProximityDataManager(client.player!!)
                     iconManager = IconManager(proximityDataManager)
                     proximityDataManager.registerReceiver()
-                }
-
-                // Вызов с интервалом
-                if (timer.hasReached()) {
-                    proximityDataManager.updateProximityData()
                 }
             }
         }
