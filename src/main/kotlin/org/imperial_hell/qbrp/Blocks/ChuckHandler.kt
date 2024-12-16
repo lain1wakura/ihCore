@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import net.minecraft.world.chunk.Chunk
+import org.imperial_hell.common.Blocks.qbBlock
 import org.imperial_hell.ihSystems.IhLogger
 import java.util.concurrent.CompletableFuture
 
@@ -14,13 +15,13 @@ class ChuckHandler(val blocksManager: BlockDataManager) {
 
     fun register() {
         ServerChunkEvents.CHUNK_LOAD.register { world: World, chunk: Chunk ->
-//            IhLogger.log("<<-    ЗАГРУЗКА ЧАНКА    ->>")
-//            IhLogger.log("<<-    ${chunk.pos}    ->>")
+            IhLogger.log("<<-    ЗАГРУЗКА ЧАНКА    ->>")
+            IhLogger.log("<<-    ${chunk.pos}    ->>")
             onChunkLoad(world, chunk)
         }
         ServerChunkEvents.CHUNK_UNLOAD.register { world: World, chunk: Chunk ->
-//            IhLogger.log("<<-    ВЫГРУЗКА ЧАНКА    ->>")
-//            IhLogger.log("<<-    ${chunk.pos}    ->>")
+            IhLogger.log("<<-    ВЫГРУЗКА ЧАНКА    ->>")
+            IhLogger.log("<<-    ${chunk.pos}    ->>")
             onChunkUnload(chunk)
         }
         PlayerBlockBreakEvents.AFTER.register(PlayerBlockBreakEvents.After { world, player, pos, state, blockEntity ->

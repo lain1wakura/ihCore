@@ -2,12 +2,10 @@ package org.imperial_hell.qbrp.Commands
 
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.arguments.IntegerArgumentType
-import net.minecraft.command.argument.IdentifierArgumentType
 import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import org.imperial_hell.qbrp.Blocks.BlockDataManager
-import org.imperial_hell.qbrp.Blocks.qbBlock
+import org.imperial_hell.common.Blocks.qbBlock
 import org.imperial_hell.ihSystems.IhLogger
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutorService

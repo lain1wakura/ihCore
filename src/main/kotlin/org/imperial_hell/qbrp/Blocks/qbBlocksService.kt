@@ -2,6 +2,7 @@ package org.imperial_hell.qbrp.Blocks
 
 import net.minecraft.util.math.BlockPos
 import org.bson.Document
+import org.imperial_hell.common.Blocks.qbBlock
 import org.imperial_hell.ihSystems.IhLogger
 import org.imperial_hell.qbrp.Files.DatabaseManager
 import org.imperial_hell.qbrp.Files.MongoConverter

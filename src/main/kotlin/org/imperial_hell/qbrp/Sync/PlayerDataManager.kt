@@ -2,7 +2,8 @@ package org.imperial_hell.qbrp.Sync
 
 import net.minecraft.server.MinecraftServer
 import java.util.UUID
-import org.imperial_hell.qbrp.Networking.Packets.PlayerDataPacket
+import org.imperial_hell.common.Packets.PlayerDataPacket
+import org.imperial_hell.common.Proxy.ProximityPlayerData
 import org.imperial_hell.qbrp.System.PlayerDataBroadcaster
 
 class PlayerDataManager(val server: MinecraftServer) {

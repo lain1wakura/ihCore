@@ -1,12 +1,12 @@
 package org.imperial_hell.ihSystems
 
-import org.imperial_hell.qbrp.System.ConsoleColors
+import org.imperial_hell.common.Utils.ConsoleColors
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 object IhLogger {
     private val logger: Logger = LoggerFactory.getLogger("IhLogger")
-    var debug: Boolean = false // Флаг для включения/выключения логирования
+    var debug: Boolean = true // Флаг для включения/выключения логирования
 
     /**
      * Логирование сообщения с заданным типом.

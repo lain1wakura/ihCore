@@ -2,8 +2,8 @@ package org.imperial_hell.qbrp.System
 
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
-import org.imperial_hell.qbrp.Networking.Packets.PlayerDataPacket
-import org.imperial_hell.qbrp.Networking.PacketsList
+import org.imperial_hell.common.Packets.PlayerDataPacket
+import org.imperial_hell.common.PacketsList
 import org.imperial_hell.qbrp.Networking.ServerPacketSender
 import kotlin.collections.forEach
 

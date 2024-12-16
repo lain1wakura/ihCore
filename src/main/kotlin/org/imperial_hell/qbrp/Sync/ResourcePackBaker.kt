@@ -11,19 +11,14 @@ import kotlinx.serialization.json.jsonPrimitive
 import org.imperial_hell.ihSystems.IhLogger
 import org.imperial_hell.ihSystems.IhLogger.MessageType
 import org.imperial_hell.qbrp.Files.IhConfig
-import org.imperial_hell.qbrp.System.ConsoleColors.bold
+import org.imperial_hell.common.Utils.ConsoleColors.bold
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.file.Files
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
-import kotlin.io.path.Path
-import kotlin.io.path.createDirectories
-import kotlin.io.path.deleteIfExists
 import kotlin.io.path.exists
-import kotlin.io.path.name
 import kotlin.io.path.pathString
-import kotlin.io.path.writeText
 
 object ResourcePackBaker {
 

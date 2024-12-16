@@ -1,7 +1,7 @@
-package org.imperial_hell.qbrp.Blocks.BlockData.Overlays
+package org.imperial_hell.common.Blocks.BlockData.Overlays
 
 import net.minecraft.util.Identifier
-import org.imperial_hell.qbrp.Blocks.BlockData.BlockData
+import org.imperial_hell.common.Blocks.BlockData.BlockData
 
 data class Overlay(val texture: Identifier,
                    val side: String,

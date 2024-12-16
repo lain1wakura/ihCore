@@ -6,7 +6,7 @@ import net.minecraft.client.MinecraftClient
 import net.minecraft.client.network.ClientPlayNetworkHandler
 import net.minecraft.util.Identifier
 import org.imperial_hell.ihSystems.IhLogger
-import org.imperial_hell.qbrp.Networking.Packets.IhPacket
+import org.imperial_hell.common.Packets.IhPacket
 
 class ClientReceiver<T>(
     val messageId: Identifier,

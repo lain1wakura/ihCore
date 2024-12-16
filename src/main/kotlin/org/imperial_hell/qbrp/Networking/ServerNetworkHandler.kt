@@ -1,13 +1,13 @@
 package org.imperial_hell.qbrp.server
 
 import org.imperial_hell.qbrp.Characters.System.UserManager
-import org.imperial_hell.qbrp.Networking.PacketsList
-import org.imperial_hell.qbrp.Networking.Packets.PlayerDataPacket
-import org.imperial_hell.qbrp.Networking.Packets.Signal
-import org.imperial_hell.qbrp.Networking.Packets.SignalPacket
-import org.imperial_hell.qbrp.Networking.Packets.StringPacket
+import org.imperial_hell.common.PacketsList
+import org.imperial_hell.common.Packets.PlayerDataPacket
+import org.imperial_hell.common.Packets.Signal
+import org.imperial_hell.common.Packets.SignalPacket
+import org.imperial_hell.common.Packets.StringPacket
 import org.imperial_hell.qbrp.Networking.ServerPacketSender
-import org.imperial_hell.qbrp.Sync.ProximityPlayerData
+import org.imperial_hell.common.Proxy.ProximityPlayerData
 import java.util.UUID
 import org.imperial_hell.qbrp.Networking.ServerReceiver
 

@@ -1,4 +1,4 @@
-package org.imperial_hell.qbrp.System
+package org.imperial_hell.common.Utils
 
 object ConsoleColors {
     const val RESET = "\u001B[0m"

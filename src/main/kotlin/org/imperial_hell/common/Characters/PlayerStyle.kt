@@ -1,4 +1,4 @@
-package org.imperial_hell.qbrp.Characters.Model
+package org.imperial_hell.common.Characters
 
 data class PlayerStyle(
     val name: String,

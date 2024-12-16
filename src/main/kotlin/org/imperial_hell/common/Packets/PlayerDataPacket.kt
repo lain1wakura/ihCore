@@ -1,7 +1,7 @@
-package org.imperial_hell.qbrp.Networking.Packets
+package org.imperial_hell.common.Packets
 
 import net.minecraft.network.PacketByteBuf
-import org.imperial_hell.qbrp.Sync.ProximityPlayerData
+import org.imperial_hell.common.Proxy.ProximityPlayerData
 
 // Класс пакета для передачи данных игрока (PlayerData)
 class PlayerDataPacket(

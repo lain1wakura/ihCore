@@ -1,6 +1,7 @@
 package org.imperial_hell.qbrp.Blocks
 
 import net.minecraft.util.math.BlockPos
+import org.imperial_hell.common.Blocks.qbBlock
 import org.imperial_hell.ihSystems.IhLogger
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap

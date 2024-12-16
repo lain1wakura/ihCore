@@ -4,10 +4,11 @@ import net.minecraft.client.network.ClientPlayerEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.math.BlockPos
 import org.imperial_hell.ihSystems.IhLogger
-import org.imperial_hell.qbrp.Blocks.qbBlock
-import org.imperial_hell.qbrp.Networking.Packets.PlayerDataPacket
-import org.imperial_hell.qbrp.Networking.Packets.StringPacket
-import org.imperial_hell.qbrp.Networking.PacketsList
+import org.imperial_hell.common.Blocks.qbBlock
+import org.imperial_hell.common.Packets.PlayerDataPacket
+import org.imperial_hell.common.Packets.StringPacket
+import org.imperial_hell.common.PacketsList
+import org.imperial_hell.common.Proxy.ProximityPlayerData
 import org.imperial_hell.qbrp.client.Network.ClientNetworkHandler.responseRequest
 import org.imperial_hell.qbrp.client.Network.ClientReceiver
 import java.util.UUID

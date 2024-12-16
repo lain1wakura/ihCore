@@ -9,8 +9,7 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.LightType
-import org.imperial_hell.ihSystems.IhLogger
-import org.imperial_hell.qbrp.Blocks.BlockData.Overlays.Overlay
+import org.imperial_hell.common.Blocks.BlockData.Overlays.Overlay
 import java.util.concurrent.ConcurrentHashMap
 
 object OverlayManager {

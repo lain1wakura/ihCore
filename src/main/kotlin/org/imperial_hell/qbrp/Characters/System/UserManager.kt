@@ -2,7 +2,7 @@ package org.imperial_hell.qbrp.Characters.System
 
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
-import org.imperial_hell.qbrp.Characters.Model.Character
+import org.imperial_hell.common.Characters.Character
 import org.imperial_hell.qbrp.Sync.PlayerDataManager
 
 class UserManager(

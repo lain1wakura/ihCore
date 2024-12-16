@@ -4,8 +4,6 @@ import java.nio.file.Paths
 
 object IhConfig {
 
-    val configFilePath: java.nio.file.Path = Paths.get("config/ihCore.conf")
-
     const val DOWNLOAD_URL: String = "http://5.9.189.53:8080/resources.zip"
     const val DOWNLOAD_DIR: String = "assets/qbrp/downloaded"
     val PACKS_DIR = Paths.get("resourcepacks").toAbsolutePath()

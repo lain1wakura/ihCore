@@ -1,4 +1,4 @@
-package org.imperial_hell.qbrp.System
+package org.imperial_hell.common.Utils
 
 import net.minecraft.util.Identifier
 

@@ -1,4 +1,4 @@
-package org.imperial_hell.qbrp.Networking
+package org.imperial_hell.common
 import net.minecraft.util.Identifier
 import org.imperial_hell.qbrp.qbSync.Companion.MOD_ID
 

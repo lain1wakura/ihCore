@@ -1,6 +1,6 @@
 package org.imperial_hell.qbrp.Characters.System
 import net.minecraft.server.network.ServerPlayerEntity
-import org.imperial_hell.qbrp.Characters.Model.Character
+import org.imperial_hell.common.Characters.Character
 
 import org.imperial_hell.qbrp.Removed.PlayerNameManager
 

@@ -2,7 +2,7 @@ package org.imperial_hell.qbrp.Networking
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.server.network.ServerPlayerEntity
 import org.imperial_hell.qbrp.Characters.System.UserManager
-import org.imperial_hell.qbrp.Sync.ProximityPlayerData
+import org.imperial_hell.common.Proxy.ProximityPlayerData
 
 class PlayerHandler(
     val userManager: UserManager,

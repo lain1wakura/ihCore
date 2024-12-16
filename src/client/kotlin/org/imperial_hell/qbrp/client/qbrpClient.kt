@@ -13,10 +13,10 @@ import net.minecraft.util.math.BlockPos
 import org.imperial_hell.qbrp.Sync.IconManager
 import org.imperial_hell.qbrp.Sync.ProximityDataManager
 import org.imperial_hell.qbrp.Utils.IhTimer
-import org.imperial_hell.qbrp.Blocks.BlockData.Overlays.Overlay
+import org.imperial_hell.common.Blocks.BlockData.Overlays.Overlay
 import org.imperial_hell.qbrp.client.Game.OverlayManager
 import org.imperial_hell.qbrp.client.Network.ClientNetworkHandler
-import org.imperial_hell.qbrp.Sync.ResourceLoader
+import org.imperial_hell.qbrp.client.Sync.ResourceLoader
 
 class qbrpClient : ClientModInitializer {
 

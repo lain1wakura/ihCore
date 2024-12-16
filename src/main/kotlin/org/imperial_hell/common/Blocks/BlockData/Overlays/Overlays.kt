@@ -1,4 +1,4 @@
-package org.imperial_hell.qbrp.Blocks.BlockData.Overlays
+package org.imperial_hell.common.Blocks.BlockData.Overlays
 
 data class Overlays(var overlays: MutableList<Overlay> = mutableListOf()) {
 }

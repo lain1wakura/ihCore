@@ -2,7 +2,6 @@ package org.imperial_hell.ihSystems
 
 import net.minecraft.text.Text
 import net.minecraft.util.Formatting
-import net.minecraft.util.Identifier
 import java.util.regex.Pattern
 
 object ColorManager {

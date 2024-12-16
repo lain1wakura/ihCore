@@ -2,11 +2,11 @@ package org.imperial_hell.qbrp.client.Network
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.util.Identifier
-import org.imperial_hell.qbrp.Networking.Packets.IhPacket
-import org.imperial_hell.qbrp.Networking.Packets.PlayerDataPacket
-import org.imperial_hell.qbrp.Networking.PacketsList
-import org.imperial_hell.qbrp.Sync.ProximityPlayerData
-import org.imperial_hell.qbrp.Sync.ResourceLoader
+import org.imperial_hell.common.Packets.IhPacket
+import org.imperial_hell.common.Packets.PlayerDataPacket
+import org.imperial_hell.common.PacketsList
+import org.imperial_hell.common.Proxy.ProximityPlayerData
+import org.imperial_hell.qbrp.client.Sync.ResourceLoader
 import java.util.concurrent.CompletableFuture
 
 object ClientNetworkHandler {

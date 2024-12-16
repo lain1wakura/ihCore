@@ -1,7 +1,7 @@
 package org.imperial_hell.qbrp.Networking
 
 import net.minecraft.network.PacketByteBuf
-import org.imperial_hell.qbrp.Networking.Packets.IhPacket
+import org.imperial_hell.common.Packets.IhPacket
 
 class CharactersPacket(
     val dataList: List<Map<String, Any>> = emptyList(),

@@ -1,4 +1,4 @@
-package org.imperial_hell.qbrp.Sync
+package org.imperial_hell.qbrp.client.Sync
 
 import okhttp3.OkHttpClient
 import okhttp3.Request

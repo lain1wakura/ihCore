@@ -1,15 +1,11 @@
 package org.imperial_hell.qbrp.Sync
 
 import com.mojang.brigadier.CommandDispatcher
-import com.mojang.brigadier.arguments.IntegerArgumentType
-import com.mongodb.internal.connection.Server
 import net.minecraft.server.command.ServerCommandSource
-import org.imperial_hell.ihSystems.IhLogger
 import org.imperial_hell.qbrp.Files.IhConfig
-import org.imperial_hell.qbrp.Networking.Packets.SignalPacket
-import org.imperial_hell.qbrp.Networking.PacketsList
+import org.imperial_hell.common.Packets.SignalPacket
+import org.imperial_hell.common.PacketsList
 import org.imperial_hell.qbrp.Networking.ServerPacketSender
-import org.imperial_hell.qbrp.System.ConsoleColors.bold
 
 class ResourceInstruments() {
 

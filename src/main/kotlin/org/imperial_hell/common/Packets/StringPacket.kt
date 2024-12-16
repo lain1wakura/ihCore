@@ -1,4 +1,4 @@
-package org.imperial_hell.qbrp.Networking.Packets
+package org.imperial_hell.common.Packets
 
 import net.minecraft.network.PacketByteBuf
 

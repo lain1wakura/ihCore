@@ -1,8 +1,8 @@
-package org.imperial_hell.qbrp.Sync
+package org.imperial_hell.common.Proxy
 
 import net.minecraft.util.Identifier
-import org.imperial_hell.qbrp.System.Animation
-import org.imperial_hell.qbrp.System.Icon
+import org.imperial_hell.common.Utils.Animation
+import org.imperial_hell.common.Utils.Icon
 
 data class ProximityPlayerData(
     val playerUuid: String,

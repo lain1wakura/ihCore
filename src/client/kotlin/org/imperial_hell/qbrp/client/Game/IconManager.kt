@@ -7,8 +7,9 @@ import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.RotationAxis
+import org.imperial_hell.common.Proxy.ProximityPlayerData
 import org.imperial_hell.ihSystems.IhLogger
-import org.imperial_hell.qbrp.System.Animation
+import org.imperial_hell.common.Utils.Animation
 import java.util.*
 
 class IconManager(private val proxyData: ProximityDataManager) {
