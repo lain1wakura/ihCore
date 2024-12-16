@@ -7,6 +7,7 @@ plugins {
     kotlin("jvm") version "2.0.21"
     id("fabric-loom") version "1.7.1"
     id("maven-publish")
+    id("com.gradleup.shadow") version "9.0.0-beta4"
 }
 
 version = project.property("mod_version") as String
@@ -60,7 +61,10 @@ repositories {
     }
     maven { url = uri("https://files.minecraftforge.net/maven/") }
     mavenCentral()
+    maven { url = uri("https://jitpack.io") }
 }
+
+
 
 dependencies {
     minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
@@ -73,10 +77,21 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.0")
     implementation("com.fasterxml.jackson.core:jackson-core:2.15.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.0")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("org.xerial:sqlite-jdbc:3.41.2.2")
+
+    val kliteVersion = "1.6.10" // you can put a released tag or commit hash here
+    implementation("com.github.codeborne.klite:klite-server:$kliteVersion")
+    implementation("com.github.codeborne.klite:klite-core:$kliteVersion")
+    // Plus any optional components with their own external dependencies, see above for list
+    implementation("com.github.codeborne.klite:klite-jackson:$kliteVersion")
+    implementation("com.github.codeborne.klite:klite-jdbc:$kliteVersion")
+
+
+    include(implementation(group= "com.squareup.okhttp3", name= "okhttp", version= "4.11.0"))
+    include(implementation(group= "com.squareup.okio", name= "okio-jvm", version= "3.2.0"))
     modImplementation("icyllis.modernui:ModernUI-Fabric:1.20.1-3.11.0.1")
     implementation("com.typesafe:config:1.4.1")
-    //implementation("org.litote.kmongo:kmongo-async:4.10.0")
     include(implementation("org.mongodb:mongodb-driver-sync:5.2.1")!!)
     include(implementation("org.mongodb:mongodb-driver-core:5.2.1")!!)
     include(implementation("org.mongodb:bson:5.2.1")!!)
@@ -85,8 +100,6 @@ dependencies {
     include(implementation("com.fasterxml.jackson.core:jackson-core:2.17.1")!!)
     include(implementation("com.fasterxml.jackson.core:jackson-annotations:2.17.1")!!)
     include(implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.17.1")!!)
-    // KMongo Core (основная библиотека для работы с MongoDB)
-    //include(implementation("org.litote.kmongo:kmongo:5.1.0")!!)
     include(implementation("org.litote.kmongo:kmongo-core:5.1.0")!!)
     include(implementation("org.litote.jackson:jackson-module-loader:0.4.0")!!)
     include(implementation("org.litote.kmongo:kmongo-data:5.1.0")!!)
@@ -96,6 +109,9 @@ dependencies {
     include(implementation("org.litote.kmongo:kmongo-property:5.1.0")!!)
     include(implementation("org.litote.kmongo:kmongo-shared:5.1.0")!!)
     include(implementation("de.undercouch:bson4jackson:2.15.1")!!)
+    configurations["implementation"].dependencies.forEach { dependency ->
+        add("include", dependency)
+    }
 }
 
 tasks.processResources {

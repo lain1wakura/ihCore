@@ -2,9 +2,9 @@ package mixin;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ChatScreen;
-import org.imperial_hell.ihcore.Networking.Packets.SignalPacket;
-import org.imperial_hell.ihcore.Networking.PacketsList;
-import org.imperial_hell.ihcore.client.Network.ClientPacketSender;
+import org.imperial_hell.qbrp.Networking.Packets.SignalPacket;
+import org.imperial_hell.qbrp.Networking.PacketsList;
+import org.imperial_hell.qbrp.client.Network.ClientPacketSender;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;

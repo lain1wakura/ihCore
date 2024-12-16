@@ -1,20 +1,20 @@
 {
   "schemaVersion": 1,
-  "id": "ihcore",
+  "id": "qbrp",
   "version": "${version}",
-  "name": "ihCore",
+  "name": "qbrp",
   "description": "",
-  "authors": [],
+  "authors": ["Трибунал"],
   "contact": {},
   "license": "All-Rights-Reserved",
   "icon": "assets/ihcore/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
-      "org.imperial_hell.ihcore.client.IhcoreClient"
+      "org.imperial_hell.qbrp.client.qbrpClient"
     ],
     "main": [
-      "org.imperial_hell.ihcore.Ihcore"
+      "org.imperial_hell.qbrp.qbSync"
     ]
   },
   "mixins": [
