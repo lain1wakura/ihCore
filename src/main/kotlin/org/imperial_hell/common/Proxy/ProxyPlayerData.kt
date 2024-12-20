@@ -4,7 +4,7 @@ import net.minecraft.util.Identifier
 import org.imperial_hell.common.Utils.Animation
 import org.imperial_hell.common.Utils.Icon
 
-data class ProximityPlayerData(
+data class ProxyPlayerData(
     val playerUuid: String,
     var state: State,
     val messageTypingProgress: String,
@@ -51,8 +51,8 @@ data class ProximityPlayerData(
     }
 
     companion object {
-        fun getBlankPlayerData(playerUuid: String): ProximityPlayerData {
-            return ProximityPlayerData(
+        fun getBlankPlayerData(playerUuid: String): ProxyPlayerData {
+            return ProxyPlayerData(
                 playerUuid = playerUuid,
                 state = State.NONE,
                 characterUuid = "",

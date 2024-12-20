@@ -1,5 +1,6 @@
 package org.imperial_hell.qbrp.server
 
+import net.minecraft.util.math.BlockPos
 import org.imperial_hell.qbrp.Characters.System.UserManager
 import org.imperial_hell.common.PacketsList
 import org.imperial_hell.common.Packets.PlayerDataPacket
@@ -7,11 +8,13 @@ import org.imperial_hell.common.Packets.Signal
 import org.imperial_hell.common.Packets.SignalPacket
 import org.imperial_hell.common.Packets.StringPacket
 import org.imperial_hell.qbrp.Networking.ServerPacketSender
-import org.imperial_hell.common.Proxy.ProximityPlayerData
+import org.imperial_hell.common.Proxy.ProxyPlayerData
+import org.imperial_hell.qbrp.Blocks.BlockDataManager
+import org.imperial_hell.qbrp.Blocks.ChuckHandler
 import java.util.UUID
 import org.imperial_hell.qbrp.Networking.ServerReceiver
 
-class ServerNetworkHandler(val userManager: UserManager) {
+class ServerNetworkHandler(val userManager: UserManager, val blockDataManager: BlockDataManager) {
 
     // Регистрация обработчиков пакетов на сервере
     fun registerServer() {
@@ -21,6 +24,10 @@ class ServerNetworkHandler(val userManager: UserManager) {
             // Обработка пакета на сервере
             userManager.syncPlayer(context.player, data)
         }.register<SignalPacket>()
+
+        ServerReceiver<String>(PacketsList.CHUNK_DATA) { data, context ->
+            //val blocks = blockDataManager.chunkHandler.getDataBlocks(context.player.world, BlockPos(data.split("||").first().toInt(), 0, data.split("||").last().toInt()))
+        }.register<StringPacket>()
 
         // Используем Receiver для обработки запроса данных игрока
         ServerReceiver<String>(PacketsList.PLAYER_DATA_REQUEST) { data, context ->
@@ -37,14 +44,14 @@ class ServerNetworkHandler(val userManager: UserManager) {
         // Используем Receiver для обработки пакета CHAT_TYPING
         ServerReceiver<Signal>(PacketsList.CHAT_TYPING) { data, context ->
             userManager.playerDataManager.updatePlayerDataAttribute(context.player.uuid) { currentData ->
-                currentData.copy(state = ProximityPlayerData.State.TYPING_REPLICA)
+                currentData.copy(state = ProxyPlayerData.State.TYPING_REPLICA)
             }
         }.register<SignalPacket>()
 
         // Используем Receiver для обработки пакета END_TYPING
         ServerReceiver<Signal>(PacketsList.END_TYPING) { data, context ->
             userManager.playerDataManager.updatePlayerDataAttribute(context.player.uuid) { currentData ->
-                currentData.copy(state = ProximityPlayerData.State.NONE)
+                currentData.copy(state = ProxyPlayerData.State.NONE)
             }
         }.register<SignalPacket>()
     }

@@ -3,37 +3,38 @@ package org.imperial_hell.qbrp.Sync
 import net.minecraft.server.MinecraftServer
 import java.util.UUID
 import org.imperial_hell.common.Packets.PlayerDataPacket
-import org.imperial_hell.common.Proxy.ProximityPlayerData
-import org.imperial_hell.qbrp.System.PlayerDataBroadcaster
+import org.imperial_hell.common.PacketsList
+import org.imperial_hell.common.Proxy.ProxyPlayerData
+import org.imperial_hell.qbrp.System.ServerBroadcaster
 
 class PlayerDataManager(val server: MinecraftServer) {
 
     // Хранение данных игроков по их UUID
-    private val proximityPlayerDataMap: MutableMap<UUID, ProximityPlayerData> = mutableMapOf()
+    private val proxyPlayerDataMap: MutableMap<UUID, ProxyPlayerData> = mutableMapOf()
 
     // Метод для получения данных игрока по UUID
-    fun getPlayerData(playerUuid: UUID): ProximityPlayerData? {
-        return proximityPlayerDataMap[playerUuid]
+    fun getPlayerData(playerUuid: UUID): ProxyPlayerData? {
+        return proxyPlayerDataMap[playerUuid]
     }
 
     // Метод для обновления данных игрока
-    fun updatePlayerData(playerUuid: UUID, newData: ProximityPlayerData) {
+    fun updatePlayerData(playerUuid: UUID, newData: ProxyPlayerData) {
         // Если данные игрока существуют, обновляем их, если нет — создаём новые
-        proximityPlayerDataMap[playerUuid] = newData
-        println("Добавлен игрок с UUID ${playerUuid.toString()} | $proximityPlayerDataMap")
+        proxyPlayerDataMap[playerUuid] = newData
+        println("Добавлен игрок с UUID ${playerUuid.toString()} | $proxyPlayerDataMap")
 
         // После изменения данных отправляем их через PlayerDataBroadcaster
         sendPlayerDataUpdate(playerUuid, newData)
     }
 
-    fun updatePlayerDataAttribute(playerUuid: UUID, attribute: (ProximityPlayerData) -> ProximityPlayerData) {
-        val existingData = proximityPlayerDataMap[playerUuid]
+    fun updatePlayerDataAttribute(playerUuid: UUID, attribute: (ProxyPlayerData) -> ProxyPlayerData) {
+        val existingData = proxyPlayerDataMap[playerUuid]
         if (existingData != null) {
             // Создаем обновленные данные, применяя функцию attribute
             val updatedData = attribute(existingData)
 
             // Сохраняем обновленные данные
-            proximityPlayerDataMap[playerUuid] = updatedData
+            proxyPlayerDataMap[playerUuid] = updatedData
 
             // Отправляем обновленные данные
             sendPlayerDataUpdate(playerUuid, updatedData)
@@ -41,18 +42,18 @@ class PlayerDataManager(val server: MinecraftServer) {
     }
 
     // Метод для отправки обновленных данных игрока
-    private fun sendPlayerDataUpdate(uuid: UUID, newData: ProximityPlayerData) {
+    private fun sendPlayerDataUpdate(uuid: UUID, newData: ProxyPlayerData) {
         // Создаем пакет для отправки данных игрока
         val playerDataPacket = PlayerDataPacket(newData)
         val player = server.playerManager.getPlayer(uuid)
-        println("Поиск по UUID $uuid | $proximityPlayerDataMap")
+        println("Поиск по UUID $uuid | $proxyPlayerDataMap")
 
         if (player != null) {
             // Игрок найден, можно безопасно привести к ServerPlayerEntity
-            PlayerDataBroadcaster.localBroadcast(player, playerDataPacket)
+            ServerBroadcaster.broadcastToLocal<PlayerDataPacket>(player, PacketsList.PLAYER_DATA, playerDataPacket)
         } else {
             // Игрок не найден, возможно, он еще не подключился или вышел
-            println("Игрок с UUID $uuid не найден на сервере. | $proximityPlayerDataMap")
+            println("Игрок с UUID $uuid не найден на сервере. | $proxyPlayerDataMap")
         }
     }
 }

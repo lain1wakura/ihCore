@@ -28,12 +28,15 @@ import org.imperial_hell.qbrp.Files.IhConfig
 import org.imperial_hell.qbrp.Networking.PlayerHandler
 import org.imperial_hell.qbrp.Sync.HTTP.ResourceServer
 import org.imperial_hell.qbrp.Sync.PlayerDataManager
-import org.imperial_hell.qbrp.Sync.ResourceInstruments
 import org.imperial_hell.qbrp.Sync.ResourcePackBaker
 import org.imperial_hell.common.Utils.ConsoleColors
 import org.imperial_hell.common.Utils.TimerUpdater
+import org.imperial_hell.qbrp.API.qbApi
+import org.imperial_hell.qbrp.Secrets.Databases
+//import org.imperial_hell.plasmo.qbrpAddon
 import org.imperial_hell.qbrp.client.Items.qbItem
 import org.imperial_hell.qbrp.server.ServerNetworkHandler
+//import su.plo.voice.api.server.PlasmoVoiceServer
 
 class qbSync : ModInitializer {
 
@@ -43,9 +46,12 @@ class qbSync : ModInitializer {
     lateinit var playerDataManager: PlayerDataManager
     lateinit var blockDataManager: BlockDataManager
     lateinit var resourceServer: ResourceServer
+    lateinit var chunkHandler: ChuckHandler
 
     var connectionState = false
     var itemsState = ""
+
+//    private val addon = qbrpAddon()
 
     override fun onInitialize() {
         // Запуск ResourceServer в корутине
@@ -55,12 +61,15 @@ class qbSync : ModInitializer {
                 runResourceServer()
             }
 
-            ResourcePackBaker.process(IhConfig.SERVER_PACK_CONTENT_PATH, IhConfig.SERVER_ITEM)
+            ResourcePackBaker.process()
             initDatabase()
             registerServerLifecycle()
         }
         registerQbItem()
         TimerUpdater.registerCycle()
+        qbApi.register()
+
+//        PlasmoVoiceServer.getAddonsLoader().load(addon)
     }
 
     private suspend fun runResourceServer() {
@@ -76,9 +85,9 @@ class qbSync : ModInitializer {
     }
 
     fun initDatabase() {
-        blockDatabaseManager = DatabaseManager("mongodb://root:r1RdLdFhIpAmvZk9@5.9.189.53:27017/", "qbblocks")
+        blockDatabaseManager = DatabaseManager(Databases.BLOCKS_KEY, "qbblocks")
         connectionState = blockDatabaseManager.connect()
-        characterDatabaseManager = DatabaseManager("mongodb://root:r1RdLdFhIpAmvZk9@5.9.189.53:27017/", "qbblocks")
+        characterDatabaseManager = DatabaseManager(Databases.CHARACTERS_KEY, "qbblocks")
     }
 
     fun registerQbItem() {
@@ -89,13 +98,11 @@ class qbSync : ModInitializer {
     fun registerCommands(dispatcher: CommandDispatcher<ServerCommandSource>) {
         //SyncCommand(userManager).register(dispatcher)
         StressTestCommand(blockDataManager).register(dispatcher)
-        ResourceInstruments().register(dispatcher)
     }
 
     fun registerHandlers() {
-        ChuckHandler(blockDataManager).register()
         PlayerHandler(userManager).registerEvents()
-        ServerNetworkHandler(userManager).registerServer()
+        ServerNetworkHandler(userManager, blockDataManager).registerServer()
     }
 
     fun registerServerLifecycle() {
@@ -112,9 +119,11 @@ class qbSync : ModInitializer {
 
     fun init(server: MinecraftServer) {
         val userService = UserService(characterDatabaseManager)
+        blockDataManager = BlockDataManager(qbBlocksService(blockDatabaseManager))
+        chunkHandler = ChuckHandler(blockDataManager)
+        chunkHandler.register()
         playerDataManager = PlayerDataManager(server)
         userManager = UserManager(userService, CharacterManager(userService), playerDataManager)
-        blockDataManager = BlockDataManager(qbBlocksService(blockDatabaseManager))
 
         registerCommands(server.commandManager.dispatcher)
         registerHandlers()

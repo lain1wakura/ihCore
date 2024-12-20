@@ -5,25 +5,24 @@ import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.minecraft.block.BlockState
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.World
 import net.minecraft.world.chunk.Chunk
 import org.imperial_hell.common.Blocks.qbBlock
 import org.imperial_hell.ihSystems.IhLogger
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ConcurrentHashMap
 
 class ChuckHandler(val blocksManager: BlockDataManager) {
 
     fun register() {
         ServerChunkEvents.CHUNK_LOAD.register { world: World, chunk: Chunk ->
-            IhLogger.log("<<-    ЗАГРУЗКА ЧАНКА    ->>")
-            IhLogger.log("<<-    ${chunk.pos}    ->>")
+//            IhLogger.log("<<-    ЗАГРУЗКА ЧАНКА    ->>")
+//            IhLogger.log("<<-    ${chunk.pos}    ->>")
             loadChunk(world, chunk)
-            ChunkUnloader(world, chunk, this)
         }
         ServerChunkEvents.CHUNK_UNLOAD.register { world: World, chunk: Chunk ->
-            //IhLogger.log("<<-    ВЫГРУЗКА ЧАНКА    ->>")
-            //IhLogger.log("<<-    ${chunk.pos}    ->>")
-            //unloadChunk(chunk)
+            unloadChunk(chunk)
         }
         PlayerBlockBreakEvents.AFTER.register(PlayerBlockBreakEvents.After { world, player, pos, state, blockEntity ->
             onBlockBreak(world, player, pos, state)
@@ -49,8 +48,8 @@ class ChuckHandler(val blocksManager: BlockDataManager) {
 
     fun unloadChunk(chunk: Chunk) {
         CompletableFuture.runAsync {
-            IhLogger.log("<<-    ВЫГРУЗКА ЧАНКА    ->>")
-            IhLogger.log("<<-    ${chunk.pos}    ->>")
+//            IhLogger.log("<<-    ВЫГРУЗКА ЧАНКА    ->>")
+//            IhLogger.log("<<-    ${chunk.pos}    ->>")
             val (start, end) = getChunkBounds(chunk)
             blocksManager.removeBlocksInRange(start, end)
         }.exceptionally { ex ->
@@ -59,14 +58,17 @@ class ChuckHandler(val blocksManager: BlockDataManager) {
         }
     }
 
+    fun getDataBlocks(world: World, pos: BlockPos): List<Pair<BlockPos, qbBlock>> {
+       return getDataBlocks(world, world.getChunk(pos))
+    }
+
     fun getDataBlocks(world: World, chunk: Chunk): List<Pair<BlockPos, qbBlock>> {
         val (start, end) = getChunkBounds(chunk)
 
         // Выполняем получение валидных позиций в асинхронном режиме
         val validPositionsFuture = CompletableFuture.supplyAsync {
             blocksManager.dbService.getValidPositions(
-                start.x, start.y, start.z,
-                end.x, end.y, end.z
+                start.x, start.z, end.x, end.z
             )
         }
 

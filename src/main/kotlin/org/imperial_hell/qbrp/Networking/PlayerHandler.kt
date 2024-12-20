@@ -2,7 +2,7 @@ package org.imperial_hell.qbrp.Networking
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.server.network.ServerPlayerEntity
 import org.imperial_hell.qbrp.Characters.System.UserManager
-import org.imperial_hell.common.Proxy.ProximityPlayerData
+import org.imperial_hell.common.Proxy.ProxyPlayerData
 
 class PlayerHandler(
     val userManager: UserManager,
@@ -27,7 +27,7 @@ class PlayerHandler(
     // Обработка игрока, когда он зашел на сервер
     fun onPlayerJoin(player: ServerPlayerEntity) {
         println("UUID: ${player.uuid}")
-        userManager.playerDataManager.updatePlayerData(player.uuid, ProximityPlayerData.getBlankPlayerData(player.uuidAsString))
+        userManager.playerDataManager.updatePlayerData(player.uuid, ProxyPlayerData.getBlankPlayerData(player.uuidAsString))
 
         val uuid = userManager.dbService.getUserUuid(player.name.string) as String
         if (uuid == "Undefined") {

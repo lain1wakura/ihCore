@@ -8,7 +8,7 @@ import org.imperial_hell.common.Blocks.qbBlock
 import org.imperial_hell.common.Packets.PlayerDataPacket
 import org.imperial_hell.common.Packets.StringPacket
 import org.imperial_hell.common.PacketsList
-import org.imperial_hell.common.Proxy.ProximityPlayerData
+import org.imperial_hell.common.Proxy.ProxyPlayerData
 import org.imperial_hell.qbrp.Utils.qbTimer
 import org.imperial_hell.qbrp.client.Network.ClientNetworkHandler.responseRequest
 import org.imperial_hell.qbrp.client.Network.ClientReceiver
@@ -19,7 +19,7 @@ class ProximityDataManager(
     private val detectionRadius: Double = 32.0 // Радиус обнаружения игроков
 ) {
     // Локальное хранилище данных игроков в радиусе
-    private val proximityPlayerDataMap: MutableMap<UUID, ProximityPlayerData> = mutableMapOf()
+    private val proxyPlayerDataMap: MutableMap<UUID, ProxyPlayerData> = mutableMapOf()
     private val blockDataMap: MutableMap<BlockPos, qbBlock> = mutableMapOf()
     private val proxyUpdateCycle = qbTimer(20) { updateProximityData() }.start()
 
@@ -30,16 +30,16 @@ class ProximityDataManager(
      */
     fun updateProximityData() {
         val currentNearbyPlayers = findNearbyPlayers().map { it.uuid }
-        proximityPlayerDataMap.values.forEach { value -> println(value) }
+        proxyPlayerDataMap.values.forEach { value -> println(value) }
 
         // Определяем новых игроков
-        val newPlayers = currentNearbyPlayers - proximityPlayerDataMap.keys
+        val newPlayers = currentNearbyPlayers - proxyPlayerDataMap.keys
         for (uuid in newPlayers) {
             onPlayerEnterRadius(uuid)
         }
 
         // Определяем игроков, которые покинули радиус
-        val removedPlayers = proximityPlayerDataMap.keys - currentNearbyPlayers
+        val removedPlayers = proxyPlayerDataMap.keys - currentNearbyPlayers
         for (uuid in removedPlayers) {
             onPlayerExitRadius(uuid)
         }
@@ -64,7 +64,7 @@ class ProximityDataManager(
      * Обрабатывает событие, когда игрок выходит из радиуса.
      */
     private fun onPlayerExitRadius(playerUuid: UUID) {
-        proximityPlayerDataMap.remove(playerUuid)
+        proxyPlayerDataMap.remove(playerUuid)
         println("Игрок $playerUuid вышел из радиуса и его данные удалены.")
     }
 
@@ -80,14 +80,14 @@ class ProximityDataManager(
     /**
      * Асинхронно запрашивает данные игрока у сервера.
      */
-    private fun fetchPlayerData(playerUuid: UUID, callback: (ProximityPlayerData?) -> Unit) {
+    private fun fetchPlayerData(playerUuid: UUID, callback: (ProxyPlayerData?) -> Unit) {
         println(playerUuid.toString())
         responseRequest(
             packetId = PacketsList.PLAYER_DATA_REQUEST,
             requestPacket = StringPacket(playerUuid.toString()),
             responseClass = PlayerDataPacket::class.java
         ) { response ->
-            if (response is ProximityPlayerData) {
+            if (response is ProxyPlayerData) {
                 callback(response)
             } else {
                 callback(null)
@@ -97,38 +97,38 @@ class ProximityDataManager(
 
 
     fun registerReceiver() {
-        ClientReceiver<ProximityPlayerData>(PacketsList.PLAYER_DATA) { data, context ->
+        ClientReceiver<ProxyPlayerData>(PacketsList.PLAYER_DATA) { data, context ->
             setPlayerData(data)
         }.register<PlayerDataPacket>()
     }
 
-    fun setPlayerData(data: ProximityPlayerData) {
+    fun setPlayerData(data: ProxyPlayerData) {
         data.clientHandle()
-        proximityPlayerDataMap[UUID.fromString(data.playerUuid)] = data
+        proxyPlayerDataMap[UUID.fromString(data.playerUuid)] = data
     }
 
     /**
      * Получить данные игрока по UUID.
      */
-    fun getPlayerData(playerUuid: UUID): ProximityPlayerData? {
-        if (proximityPlayerDataMap[playerUuid] == null) {
+    fun getPlayerData(playerUuid: UUID): ProxyPlayerData? {
+        if (proxyPlayerDataMap[playerUuid] == null) {
             return null
             IhLogger.log("Данные игрока по UUID <<$playerUuid>> не найдены.", type = IhLogger.MessageType.ERROR)
         }
-        return proximityPlayerDataMap[playerUuid] as ProximityPlayerData
+        return proxyPlayerDataMap[playerUuid] as ProxyPlayerData
     }
 
     /**
      * Удалить данные игрока по UUID.
      */
     fun removePlayerData(playerUuid: UUID) {
-        proximityPlayerDataMap.remove(playerUuid)
+        proxyPlayerDataMap.remove(playerUuid)
     }
 
     /**
      * Получить всех игроков в радиусе.
      */
-    fun getAllPlayerData(): Map<UUID, ProximityPlayerData> {
-        return proximityPlayerDataMap.toMap()
+    fun getAllPlayerData(): Map<UUID, ProxyPlayerData> {
+        return proxyPlayerDataMap.toMap()
     }
 }

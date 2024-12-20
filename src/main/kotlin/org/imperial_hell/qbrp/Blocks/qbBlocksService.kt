@@ -22,31 +22,39 @@ class qbBlocksService(val databaseManager: DatabaseManager) {
         databaseManager.upsertData("blocks", mapOf("x" to pos.x, "y" to pos.y, "z" to pos.z), mapOf("key" to newKey))
     }
 
-    fun getValidPositions(x1: Int, y1: Int, z1: Int, x2: Int, y2: Int, z2: Int): List<BlockPos> {
-        IhLogger.log("Ищем позиции блоков по координатам: <<$x1, $z1 : $x2, $z2>>", debugMode = true)
+    fun getValidPositions(x1: Int, z1: Int, x2: Int, z2: Int): List<BlockPos> {
+        //IhLogger.log("Ищем позиции блоков по координатам: <<$x1, $z1 : $x2, $z2>>", debugMode = true)
+
         // Убедимся, что диапазон указан правильно
         val (minX, maxX) = if (x1 <= x2) x1 to x2 else x2 to x1
-        val (minY, maxY) = if (y1 <= y2) y1 to y2 else y2 to y1
         val (minZ, maxZ) = if (z1 <= z2) z1 to z2 else z2 to z1
+        //IhLogger.log("Диапазон координат вычислен: X от $minX до $maxX, Z от $minZ до $maxZ", debugMode = true)
+
+//        val a = -1000
+//        val b = 1000
 
         // Формируем запрос к MongoDB для поиска по диапазону координат
         val query = mapOf(
             "x" to mapOf("\$gte" to minX, "\$lte" to maxX),
-            "y" to mapOf("\$gte" to minY, "\$lte" to maxY),
             "z" to mapOf("\$gte" to minZ, "\$lte" to maxZ)
         )
+        //IhLogger.log("Сформирован запрос к базе данных: $query", debugMode = true)
 
         // Выполняем запрос в коллекции "blocks"
         val documents = databaseManager.fetchAll("blocks", query)
+        //IhLogger.log("Найдено документов: ${documents.size}", debugMode = true)
 
         // Преобразуем найденные документы в список BlockPos
         return documents.map { doc ->
             val x = doc.getInteger("x")
             val y = doc.getInteger("y")
             val z = doc.getInteger("z")
+            //IhLogger.log("Обрабатываем документ: x=$x, y=$y, z=$z", debugMode = true)
             BlockPos(x, y, z)
         }
+
     }
+
 
     fun importBlock(pos: BlockPos): qbBlock? {
         IhLogger.log("Импортирование блока на позиции<<$pos>>", debugMode = true)

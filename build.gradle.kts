@@ -61,8 +61,12 @@ repositories {
     }
     maven { url = uri("https://files.minecraftforge.net/maven/") }
     mavenCentral()
+    maven("https://repo.plasmoverse.com/releases")
+    maven("https://repo.plasmoverse.com/snapshots")
+    maven("https://repo.plo.su")
     maven { url = uri("https://jitpack.io") }
 }
+
 
 
 
@@ -74,18 +78,22 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
     modImplementation("net.fabricmc:fabric-language-kotlin:${project.property("kotlin_loader_version")}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
+    modImplementation("su.plo.voice.api:server-common:2.1.0-SNAPSHOT")
+    modImplementation("su.plo.voice.api:server:2.1.0-SNAPSHOT")
+    //modImplementation("su.plo:pv-addon-lavaplayer-lib:1.0.7")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.15.0")
     implementation("com.fasterxml.jackson.core:jackson-core:2.15.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.0")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("org.xerial:sqlite-jdbc:3.41.2.2")
 
+
     val kliteVersion = "1.6.10" // you can put a released tag or commit hash here
-    implementation("com.github.codeborne.klite:klite-server:$kliteVersion")
-    implementation("com.github.codeborne.klite:klite-core:$kliteVersion")
+    include(implementation("com.github.codeborne.klite:klite-server:$kliteVersion")!!)
+    include(implementation("com.github.codeborne.klite:klite-core:$kliteVersion")!!)
     // Plus any optional components with their own external dependencies, see above for list
-    implementation("com.github.codeborne.klite:klite-jackson:$kliteVersion")
-    implementation("com.github.codeborne.klite:klite-jdbc:$kliteVersion")
+    include(implementation("com.github.codeborne.klite:klite-jackson:$kliteVersion")!!)
+    include(implementation("com.github.codeborne.klite:klite-jdbc:$kliteVersion")!!)
 
 
     include(implementation(group= "com.squareup.okhttp3", name= "okhttp", version= "4.11.0"))
@@ -109,9 +117,9 @@ dependencies {
     include(implementation("org.litote.kmongo:kmongo-property:5.1.0")!!)
     include(implementation("org.litote.kmongo:kmongo-shared:5.1.0")!!)
     include(implementation("de.undercouch:bson4jackson:2.15.1")!!)
-    configurations["implementation"].dependencies.forEach { dependency ->
-        add("include", dependency)
-    }
+//    configurations["implementation"].dependencies.forEach { dependency ->
+//        add("include", dependency)
+//    }
 }
 
 tasks.processResources {
@@ -139,6 +147,13 @@ tasks.withType<KotlinCompile>().configureEach {
     compilerOptions.jvmTarget.set(JvmTarget.fromTarget(targetJavaVersion.toString()))
 }
 
+
+tasks.shadowJar {
+    relocate("kotlin", "su.plo.voice.libs.kotlin")
+    relocate("kotlinx.coroutines", "su.plo.voice.libs.kotlinx.coroutines")
+    relocate("kotlinx.serialization", "su.plo.voice.libs.kotlinx.serialization")
+}
+
 tasks.jar {
     // Включение лицензионного файла в JAR
     from("LICENSE") {
@@ -155,7 +170,7 @@ publishing {
         }
     }
 
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    // See https://docs.gradle.org/current /userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
         // Add repositories to publish to here.
         // Notice: This block does NOT have the same function as the block in the top level.

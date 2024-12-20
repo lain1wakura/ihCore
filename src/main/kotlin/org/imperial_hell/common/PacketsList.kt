@@ -13,6 +13,8 @@ object PacketsList {
     val PLAYER_DATA = Identifier(MOD_ID, "player_data") // Отправляется на сервер, когда игрок закрывает чат (Signal, String)
     val PLAYER_DATA_REQUEST = Identifier(MOD_ID, "player_data_request") // Отправляется на сервер, когда игрок закрывает чат (Signal, String)
 
-    val LOADRES = Identifier(MOD_ID, "loadres") // Отправляется на сервер, когда игрок закрывает чат (Signal, String)
+    val LOADRES = Identifier(MOD_ID, "loadres") // Отправляется клиенту как запрос на скачивание ресурспака
+
+    val CHUNK_DATA = Identifier(MOD_ID, "chunk_data")
 
 }

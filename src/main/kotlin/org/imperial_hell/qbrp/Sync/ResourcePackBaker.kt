@@ -15,8 +15,10 @@ import org.imperial_hell.common.Utils.ConsoleColors.bold
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
+import kotlin.io.path.Path
 import kotlin.io.path.exists
 import kotlin.io.path.pathString
 
@@ -145,6 +147,38 @@ object ResourcePackBaker {
         }
     }
 
+    fun copyDirs(sourceDir: File, destinationDir: File) {
+        try {
+            if (!sourceDir.exists() || !sourceDir.isDirectory) {
+                IhLogger.log("[!] Исходная директория не найдена или не является директорией: ${sourceDir.path}", IhLogger.MessageType.WARN)
+                return
+            }
+
+            sourceDir.walk().forEach { file ->
+                val relativePath = sourceDir.toPath().relativize(file.toPath()).toString()
+                val destinationFile = File(destinationDir, relativePath)
+
+                if (file.isDirectory) {
+                    // Создаем директорию в целевом месте
+                    if (!destinationFile.exists()) {
+                        destinationFile.mkdirs()
+                    }
+                } else if (file.isFile) {
+                    // Копируем файл
+                    destinationFile.parentFile?.mkdirs() // Создаём директорию для файла, если её нет
+                    file.inputStream().use { input ->
+                        destinationFile.outputStream().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                    IhLogger.log("<<[>]>> ${file.path.replace("qbrpres", "")} -> ${destinationFile.path.replace("qbrpres", "")}", IhLogger.MessageType.INFO)
+                }
+            }
+        } catch (e: Exception) {
+            IhLogger.log("[!] Ошибка копирования: ${sourceDir.path.replace("qbrpres", "")} -> ${destinationDir.path.replace("qbrpres", "")} | ${e.message}", IhLogger.MessageType.ERROR)
+        }
+    }
+
     fun processJsonFiles(jsonFiles: List<File>, targetDirectory: File, packPath: File) {
         var customModelData = 1 // Счетчик для custom_model_data
 
@@ -201,6 +235,7 @@ object ResourcePackBaker {
                 val overrideFile = File(packPath, "models/item/$overrideFileName")
 
                 addOverrideToFile(overrideFile, customModelData++, modelName)
+                File(IhConfig.SERVER_RESOURCES_PATH.toFile(), "itemres.json").writeText("")
                 updateModelDataFile(File(IhConfig.SERVER_RESOURCES_PATH.toFile(), "itemres.json"), modelName, customModelData)
             } catch (e: Exception) {
                 IhLogger.log("[!] Ошибка обработки JSON файла: ${file.path} | ${e.message}", IhLogger.MessageType.ERROR)
@@ -300,7 +335,14 @@ object ResourcePackBaker {
         return directory.listFiles()?.toList() ?: emptyList()
     }
 
-    fun process(packDirectory: java.nio.file.Path, resourcesDirectory: java.nio.file.Path): String {
+    fun addOverrides(directory: java.nio.file.Path) {
+        Files.walk(Paths.get(directory.toString()))
+            .forEach { copyDirs(it.toFile(), File(IhConfig.SERVER_PACK_PATH.toFile(), "assets")) }
+    }
+
+    fun process(): String {
+        val packDirectory = IhConfig.SERVER_PACK_CONTENT_PATH
+        val resourcesDirectory = IhConfig.SERVER_ITEM
         IhLogger.log(bold("<<Инициализация пакета ресурсов>>"))
         IhLogger.log("<<|>> Директория ресурсов: ${packDirectory.pathString}")
         IhLogger.log("<<|>> Выходные данные: ${resourcesDirectory.pathString}")
@@ -319,6 +361,8 @@ object ResourcePackBaker {
                 resourcesDirectory.toFile(),
                 packDirectory.toFile()
             )
+            IhLogger.log("<<[!]>> Обработка замен")
+            addOverrides(IhConfig.SERVER_OVERRIDE_PATH)
             IhLogger.log("<<[!]>> Архивация")
             zipFolder(IhConfig.SERVER_BAKED_PATH.toFile(), File(IhConfig.DISTRIBUTION_PACK_PATH.toString()))
             IhLogger.log(bold("<<Пакет ресурсов создан>>"))

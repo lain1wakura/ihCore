@@ -1,4 +1,4 @@
-package org.imperial_hell.qbrp.Sync
+/*package org.imperial_hell.qbrp.Sync
 
 import com.mojang.brigadier.CommandDispatcher
 import net.minecraft.server.command.ServerCommandSource
@@ -26,3 +26,4 @@ class ResourceInstruments() {
         )
     }
 }
+*/

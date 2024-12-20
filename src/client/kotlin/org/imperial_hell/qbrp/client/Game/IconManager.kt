@@ -7,7 +7,7 @@ import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.RotationAxis
-import org.imperial_hell.common.Proxy.ProximityPlayerData
+import org.imperial_hell.common.Proxy.ProxyPlayerData
 import org.imperial_hell.ihSystems.IhLogger
 import org.imperial_hell.common.Utils.Animation
 import java.util.*
@@ -34,7 +34,7 @@ class IconManager(private val proxyData: ProximityDataManager) {
 
         // Управление анимацией в зависимости от состояния
         when (playerData.state) {
-            ProximityPlayerData.State.NONE -> {
+            ProxyPlayerData.State.NONE -> {
                 if (iconAnimation.isFinished || !iconAnimation.started) {
                     // Перезапуск анимации назад
                     iconAnimation.restartBackward()
@@ -52,7 +52,7 @@ class IconManager(private val proxyData: ProximityDataManager) {
                 )
             }
 
-            ProximityPlayerData.State.TYPING_REPLICA -> {
+            ProxyPlayerData.State.TYPING_REPLICA -> {
                 matrices.push()
                 if (!iconAnimation.started) {
                     // Анимация только начинается, направление вверх

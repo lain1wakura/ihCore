@@ -4,8 +4,10 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.util.Identifier
 import org.imperial_hell.common.Packets.IhPacket
 import org.imperial_hell.common.Packets.PlayerDataPacket
+import org.imperial_hell.common.Packets.Signal
+import org.imperial_hell.common.Packets.SignalPacket
 import org.imperial_hell.common.PacketsList
-import org.imperial_hell.common.Proxy.ProximityPlayerData
+import org.imperial_hell.common.Proxy.ProxyPlayerData
 import org.imperial_hell.qbrp.client.Sync.ResourceLoader
 import java.util.concurrent.CompletableFuture
 
@@ -14,9 +16,9 @@ object ClientNetworkHandler {
 
     // Регистрация обработчиков пакетов на клиенте
     fun registerClient() {
-        ClientReceiver<ProximityPlayerData>(PacketsList.LOADRES) { data, context ->
+        ClientReceiver<Signal>(PacketsList.LOADRES) { data, context ->
             ResourceLoader.downloadResources()
-        }.register<PlayerDataPacket>()
+        }.register<SignalPacket>()
     }
 
     // Метод для отправки запроса и ожидания ответа

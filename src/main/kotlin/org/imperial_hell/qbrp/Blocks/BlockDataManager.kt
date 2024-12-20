@@ -60,18 +60,22 @@ class BlockDataManager(
     }
 
     fun removeBlocksInRange(startPos: BlockPos, endPos: BlockPos) {
-        IhLogger.log("Удаление блоков в диапазоне: <<$startPos>> - <<$endPos>>", debugMode = true)
+        //IhLogger.log("Удаление блоков в диапазоне: <<$startPos>> - <<$endPos>>", debugMode = true)
         blocks.keys.removeIf { pos ->
             val isInRange = pos.x in startPos.x..endPos.x &&
-                    pos.y in startPos.y..endPos.y &&
                     pos.z in startPos.z..endPos.z
+
             if (isInRange) {
-                dbService.exportBlock(blocks[pos] as qbBlock, pos)
-                true // Удаление блоков производится в maps на следующем проходе итератора
+                val block = blocks[pos]
+                //IhLogger.log("Удаляется блок: Позиция = $pos, Блок = $block", debugMode = true)
+                dbService.exportBlock(block as qbBlock, pos)
+                true // Удаление блоков производится на следующем проходе итератора
             } else {
+                //IhLogger.log("Блок за пределами диапазона: Позиция = $pos (${startPos.x}, ${startPos.z})", debugMode = true)
                 false
             }
         }
     }
+
 
 }
