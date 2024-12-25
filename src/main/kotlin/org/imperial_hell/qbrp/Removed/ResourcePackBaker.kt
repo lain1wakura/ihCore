@@ -1,4 +1,4 @@
-package org.imperial_hell.qbrp.Sync
+package org.imperial_hell.qbrp.Removed
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
@@ -15,10 +15,10 @@ import org.imperial_hell.common.Utils.ConsoleColors.bold
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
-import kotlin.io.path.Path
 import kotlin.io.path.exists
 import kotlin.io.path.pathString
 
@@ -114,7 +114,7 @@ object ResourcePackBaker {
         val matchingFiles = mutableListOf<File>()
 
         if (!directory.exists() || !directory.isDirectory) {
-            IhLogger.log("Указанная директория не существует или не является папкой: ${directory.absolutePath}", IhLogger.MessageType.ERROR)
+            IhLogger.log("Указанная директория не существует или не является папкой: ${directory.absolutePath}", MessageType.ERROR)
             return matchingFiles
         }
 
@@ -130,7 +130,7 @@ object ResourcePackBaker {
     fun copyFile(sourceFile: File, destinationFile: File) {
         try {
             if (!sourceFile.exists()) {
-                IhLogger.log("[!] Исходный файл не найден: ${sourceFile.path}", IhLogger.MessageType.WARN)
+                IhLogger.log("[!] Исходный файл не найден: ${sourceFile.path}", MessageType.WARN)
                 return
             }
 
@@ -141,16 +141,16 @@ object ResourcePackBaker {
                 }
             }
 
-            IhLogger.log("<<[>]>> ${sourceFile.path.replace("qbrpres", "")} -> ${destinationFile.path.replace("qbrpres", "")}", IhLogger.MessageType.INFO)
+            IhLogger.log("<<[>]>> ${sourceFile.path.replace("qbrpres", "")} -> ${destinationFile.path.replace("qbrpres", "")}", MessageType.INFO)
         } catch (e: Exception) {
-            IhLogger.log("[!] Ошибка копирования: ${sourceFile.path.replace("qbrpres", "")} -> ${destinationFile.path.replace("qbrpres", "")} | ${e.message}", IhLogger.MessageType.ERROR)
+            IhLogger.log("[!] Ошибка копирования: ${sourceFile.path.replace("qbrpres", "")} -> ${destinationFile.path.replace("qbrpres", "")} | ${e.message}", MessageType.ERROR)
         }
     }
 
     fun copyDirs(sourceDir: File, destinationDir: File) {
         try {
             if (!sourceDir.exists() || !sourceDir.isDirectory) {
-                IhLogger.log("[!] Исходная директория не найдена или не является директорией: ${sourceDir.path}", IhLogger.MessageType.WARN)
+                IhLogger.log("[!] Исходная директория не найдена или не является директорией: ${sourceDir.path}", MessageType.WARN)
                 return
             }
 
@@ -171,11 +171,11 @@ object ResourcePackBaker {
                             input.copyTo(output)
                         }
                     }
-                    IhLogger.log("<<[>]>> ${file.path.replace("qbrpres", "")} -> ${destinationFile.path.replace("qbrpres", "")}", IhLogger.MessageType.INFO)
+                    IhLogger.log("<<[>]>> ${file.path.replace("qbrpres", "")} -> ${destinationFile.path.replace("qbrpres", "")}", MessageType.INFO)
                 }
             }
         } catch (e: Exception) {
-            IhLogger.log("[!] Ошибка копирования: ${sourceDir.path.replace("qbrpres", "")} -> ${destinationDir.path.replace("qbrpres", "")} | ${e.message}", IhLogger.MessageType.ERROR)
+            IhLogger.log("[!] Ошибка копирования: ${sourceDir.path.replace("qbrpres", "")} -> ${destinationDir.path.replace("qbrpres", "")} | ${e.message}", MessageType.ERROR)
         }
     }
 
@@ -207,7 +207,7 @@ object ResourcePackBaker {
                             if (sourceFile.exists()) {
                                 copyFile(sourceFile, destinationFile)
                             } else {
-                                IhLogger.log("[!] Текстура не найдена: ${sourceFile.path}", IhLogger.MessageType.ERROR)
+                                IhLogger.log("[!] Текстура не найдена: ${sourceFile.path}", MessageType.ERROR)
                             }
                         } else {
                             modifiedTexturePath = texturePathString
@@ -226,7 +226,7 @@ object ResourcePackBaker {
                     copyFile(file, File(packPath, destinationPath))
                     modelCopyDestinationPath.writeText(Json.encodeToString(JsonObject.serializer(), JsonObject(updatedJsonElement)))
                 } catch (e: Exception) {
-                    IhLogger.log("[!] Ошибка обработки JSON файла: ${file.path} | ${e.message}", IhLogger.MessageType.ERROR)
+                    IhLogger.log("[!] Ошибка обработки JSON файла: ${file.path} | ${e.message}", MessageType.ERROR)
                 }
                 val modelName = file.nameWithoutExtension
 
@@ -238,7 +238,7 @@ object ResourcePackBaker {
                 File(IhConfig.SERVER_RESOURCES_PATH.toFile(), "itemres.json").writeText("")
                 updateModelDataFile(File(IhConfig.SERVER_RESOURCES_PATH.toFile(), "itemres.json"), modelName, customModelData)
             } catch (e: Exception) {
-                IhLogger.log("[!] Ошибка обработки JSON файла: ${file.path} | ${e.message}", IhLogger.MessageType.ERROR)
+                IhLogger.log("[!] Ошибка обработки JSON файла: ${file.path} | ${e.message}", MessageType.ERROR)
             }
             models_count++
         }
@@ -335,7 +335,7 @@ object ResourcePackBaker {
         return directory.listFiles()?.toList() ?: emptyList()
     }
 
-    fun addOverrides(directory: java.nio.file.Path) {
+    fun addOverrides(directory: Path) {
         Files.walk(Paths.get(directory.toString()))
             .forEach { copyDirs(it.toFile(), File(IhConfig.SERVER_PACK_PATH.toFile(), "assets")) }
     }
@@ -367,7 +367,7 @@ object ResourcePackBaker {
             zipFolder(IhConfig.SERVER_BAKED_PATH.toFile(), File(IhConfig.DISTRIBUTION_PACK_PATH.toString()))
             IhLogger.log(bold("<<Пакет ресурсов создан>>"))
         } catch (e: Exception) {
-            IhLogger.log("[!] $e", type = IhLogger.MessageType.ERROR)
+            IhLogger.log("[!] $e", type = MessageType.ERROR)
             return e.message.toString()
         }
         return ""

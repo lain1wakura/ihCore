@@ -24,18 +24,18 @@ import org.imperial_hell.qbrp.Characters.System.UserManager
 import org.imperial_hell.qbrp.Characters.System.UserService
 import org.imperial_hell.qbrp.Commands.StressTestCommand
 import org.imperial_hell.qbrp.Files.DatabaseManager
-import org.imperial_hell.qbrp.Files.IhConfig
 import org.imperial_hell.qbrp.Networking.PlayerHandler
 import org.imperial_hell.qbrp.Sync.HTTP.ResourceServer
 import org.imperial_hell.qbrp.Sync.PlayerDataManager
-import org.imperial_hell.qbrp.Sync.ResourcePackBaker
+import org.imperial_hell.qbrp.Removed.ResourcePackBaker
 import org.imperial_hell.common.Utils.ConsoleColors
 import org.imperial_hell.common.Utils.TimerUpdater
 import org.imperial_hell.qbrp.API.qbApi
 import org.imperial_hell.qbrp.Secrets.Databases
-//import org.imperial_hell.plasmo.qbrpAddon
 import org.imperial_hell.qbrp.client.Items.qbItem
 import org.imperial_hell.qbrp.server.ServerNetworkHandler
+import org.imperial_hell.qbrp.Resources.ResourceCentre
+
 //import su.plo.voice.api.server.PlasmoVoiceServer
 
 class qbSync : ModInitializer {
@@ -56,18 +56,16 @@ class qbSync : ModInitializer {
     override fun onInitialize() {
         // Запуск ResourceServer в корутине
         if (FabricLoader.getInstance().environmentType == EnvType.SERVER) {
-
             GlobalScope.launch {
                 runResourceServer()
             }
-
-            ResourcePackBaker.process()
+            ResourceCentre.bakeResourcePack()
             initDatabase()
             registerServerLifecycle()
         }
         registerQbItem()
-        TimerUpdater.registerCycle()
         qbApi.register()
+        TimerUpdater.registerCycle()
 
 //        PlasmoVoiceServer.getAddonsLoader().load(addon)
     }
@@ -94,6 +92,10 @@ class qbSync : ModInitializer {
         Registry.register(Registries.ITEM, Identifier(MOD_ID, "custom_item_handheld"), CUSTOM_ITEM_HANDHELD)
         Registry.register(Registries.ITEM, Identifier(MOD_ID, "custom_item_generated"), CUSTOM_ITEM_GENERATED)
     }
+
+//    fun initPlasmoAddon() {
+//        PlasmoVoiceServer.getAddonsLoader().load(plasmoAddon)
+//    }
 
     fun registerCommands(dispatcher: CommandDispatcher<ServerCommandSource>) {
         //SyncCommand(userManager).register(dispatcher)

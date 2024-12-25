@@ -22,7 +22,7 @@ class qbrpClient : ClientModInitializer {
 
     override fun onInitializeClient() {
         ClientNetworkHandler.registerClient()
-        ResourceLoader.downloadResources()
+//        ResourceLoader.downloadResources()
 
         var screenOpened = false
         ClientTickEvents.END_CLIENT_TICK.register { client ->
@@ -84,7 +84,7 @@ class qbrpClient : ClientModInitializer {
                     if (Math.random() * 100 < chance) {
                         OverlayManager.addOverlay(
                             BlockPos((px + bX).toInt(), (py + bY).toInt(), (pz + bZ).toInt()),
-                            Overlay(Identifier("qbrp", "textures/items/item_placeholder.png"), "top")
+                            Overlay(Identifier("qbrp", "textures/items/placeholder.png"), "top")
                         )
                     }
                 }

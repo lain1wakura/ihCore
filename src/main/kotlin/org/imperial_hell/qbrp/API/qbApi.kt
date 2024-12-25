@@ -2,11 +2,10 @@ package org.imperial_hell.qbrp.API
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback
 import net.minecraft.server.command.CommandManager
-import net.minecraft.text.Text
 import org.imperial_hell.common.Packets.SignalPacket
 import org.imperial_hell.common.PacketsList
 import org.imperial_hell.qbrp.Networking.ServerPacketSender
-import org.imperial_hell.qbrp.Sync.ResourcePackBaker
+import org.imperial_hell.qbrp.Removed.ResourcePackBaker
 
 object qbApi {
 
