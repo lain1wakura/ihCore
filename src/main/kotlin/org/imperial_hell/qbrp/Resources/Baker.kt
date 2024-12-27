@@ -2,12 +2,9 @@ package org.imperial_hell.qbrp.Resources
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import java.nio.file.Path
 import org.imperial_hell.ihSystems.IhLogger
-import org.imperial_hell.qbrp.Files.IhConfig
-import org.imperial_hell.qbrp.Resources.Data.ModelData
+import org.imperial_hell.qbrp.System.Files.IhConfig
 import java.io.File
-import java.nio.file.Paths
 
 object Baker {
 

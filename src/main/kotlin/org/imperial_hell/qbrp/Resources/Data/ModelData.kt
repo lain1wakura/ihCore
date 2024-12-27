@@ -1,13 +1,7 @@
 package org.imperial_hell.qbrp.Resources.Data
-
-import kotlinx.serialization.json.Json
-import org.imperial_hell.qbrp.Resources.ContentUnits.ContentUnit
-import org.imperial_hell.qbrp.Resources.UnitKey
-import java.nio.file.Path
 import com.google.gson.JsonObject
-import org.imperial_hell.qbrp.Resources.ContentUnits.ModelUnit
 
-class ModelData(val json: JsonObject) : RawData {
+class ModelData(val json: JsonObject) : RawData() {
     val textures: MutableMap<String, String> = mutableMapOf()
 
     init {
@@ -46,9 +40,5 @@ class ModelData(val json: JsonObject) : RawData {
             textures[key] = newTexturePath  // Обновляем каждый путь текстуры
         }
         updateJson()  // Обновляем JSON после изменения
-    }
-
-    override fun convert(path: Path, key: UnitKey, name: String): ContentUnit {
-        return ModelUnit(path, key, name, this)
     }
 }

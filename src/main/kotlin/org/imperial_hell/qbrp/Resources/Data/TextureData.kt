@@ -7,13 +7,4 @@ import java.nio.file.Path
 
 data class TextureData(
     val texturePath: String // Путь к текстуре, например "textures/items/my_item.png"
-) : RawData {
-
-    override fun convert(
-        path: Path,
-        key: UnitKey,
-        name: String
-    ): ContentUnit {
-        return TextureUnit(path, key, name, this)
-    }
-}
+) : RawData(TextureUnit::class.java)

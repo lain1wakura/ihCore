@@ -1,9 +1,9 @@
 package org.imperial_hell.qbrp.Characters.System
 
 import org.bson.Document
-import org.imperial_hell.qbrp.Files.DatabaseManager
+import org.imperial_hell.qbrp.System.Files.DatabaseManager
 import org.imperial_hell.common.Characters.Character
-import org.imperial_hell.qbrp.Files.MongoConverter
+import org.imperial_hell.qbrp.System.Files.MongoConverter
 
 class UserService(private val databaseManager: DatabaseManager) {
 

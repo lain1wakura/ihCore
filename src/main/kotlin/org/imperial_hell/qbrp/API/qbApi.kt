@@ -5,7 +5,7 @@ import net.minecraft.server.command.CommandManager
 import org.imperial_hell.common.Packets.SignalPacket
 import org.imperial_hell.common.PacketsList
 import org.imperial_hell.qbrp.Networking.ServerPacketSender
-import org.imperial_hell.qbrp.Removed.ResourcePackBaker
+import org.imperial_hell.qbrp.Resources.ResourceCentre
 
 object qbApi {
 
@@ -14,8 +14,9 @@ object qbApi {
             dispatcher.register(
                 CommandManager.literal("qbapi")
                     .then(CommandManager.literal("res_bake").executes { context ->
-                    ResourcePackBaker.process()
-                    1
+                        //ResourceCentre.bakeResourcePack()
+                        TODO("Доделать res_bake")
+                        1
                 })
                     .then(CommandManager.literal("res_load").executes { context ->
                         ServerPacketSender.send(context.source.player, PacketsList.LOADRES, SignalPacket())

@@ -8,6 +8,8 @@ plugins {
     id("fabric-loom") version "1.7.1"
     id("maven-publish")
     id("com.gradleup.shadow") version "9.0.0-beta4"
+    kotlin("plugin.lombok") version "2.0.0"
+    id("io.freefair.lombok") version "8.10"
 }
 
 version = project.property("mod_version") as String
@@ -66,10 +68,6 @@ repositories {
     maven("https://repo.plo.su")
     maven { url = uri("https://jitpack.io") }
 }
-
-
-
-
 dependencies {
     minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
     mappings("net.fabricmc:yarn:${project.property("yarn_mappings")}:v2")
@@ -86,16 +84,12 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.0")
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("org.xerial:sqlite-jdbc:3.41.2.2")
-
-
     val kliteVersion = "1.6.10" // you can put a released tag or commit hash here
     include(implementation("com.github.codeborne.klite:klite-server:$kliteVersion")!!)
     include(implementation("com.github.codeborne.klite:klite-core:$kliteVersion")!!)
     // Plus any optional components with their own external dependencies, see above for list
     include(implementation("com.github.codeborne.klite:klite-jackson:$kliteVersion")!!)
     include(implementation("com.github.codeborne.klite:klite-jdbc:$kliteVersion")!!)
-
-
     include(implementation(group= "com.squareup.okhttp3", name= "okhttp", version= "4.11.0"))
     include(implementation(group= "com.squareup.okio", name= "okio-jvm", version= "3.2.0"))
     modImplementation("icyllis.modernui:ModernUI-Fabric:1.20.1-3.11.0.1")

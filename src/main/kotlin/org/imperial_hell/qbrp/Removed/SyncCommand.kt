@@ -1,4 +1,4 @@
-package org.imperial_hell.qbrp.Characters.Commands
+package org.imperial_hell.qbrp.Removed
 
 import com.mojang.brigadier.Command
 import com.mojang.brigadier.CommandDispatcher

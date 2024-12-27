@@ -1,4 +1,4 @@
-package org.imperial_hell.qbrp.Removed
+/*package org.imperial_hell.qbrp.Removed
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
@@ -267,31 +267,6 @@ object ResourcePackBaker {
 
     }
 
-    fun zipFolder(sourceFolder: File, outputZip: File) {
-        if (!sourceFolder.exists() || !sourceFolder.isDirectory) {
-            throw IllegalArgumentException("Источник должен быть существующей директорией: ${sourceFolder.absolutePath}")
-        }
-
-        ZipOutputStream(FileOutputStream(outputZip)).use { zipOut ->
-            sourceFolder.walkTopDown().forEach { file ->
-                val relativePath = file.relativeTo(sourceFolder).path
-                val zipEntry = ZipEntry(
-                    if (file.isDirectory) "$relativePath/" else relativePath
-                )
-
-                zipOut.putNextEntry(zipEntry)
-                if (file.isFile) {
-                    file.inputStream().use { input ->
-                        input.copyTo(zipOut)
-                    }
-                }
-                zipOut.closeEntry()
-            }
-        }
-        IhLogger.log("Архив ${outputZip.name} создан успешно.")
-    }
-
-
     fun addOverrideToFile(file: File, customModelData: Int, modelPath: String) {
         // Шаг 1: Прочитать существующий JSON из файла, если он есть
         val jsonObject = if (file.exists()) {
@@ -374,3 +349,4 @@ object ResourcePackBaker {
     }
 
 }
+*/

@@ -1,4 +1,4 @@
-package org.imperial_hell.qbrp.Files
+package org.imperial_hell.qbrp.System.Files
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

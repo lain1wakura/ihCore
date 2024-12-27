@@ -7,9 +7,13 @@ import org.imperial_hell.qbrp.Resources.ContentUnits.ContentUnit
 import org.imperial_hell.qbrp.Resources.ContentUnits.ResourceUnit
 import org.imperial_hell.qbrp.Resources.Data.RawData
 import org.imperial_hell.qbrp.Resources.UnitKey
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 import kotlin.io.path.name
+import kotlin.reflect.full.primaryConstructor
 
 open class Branch(path: Path,
                   val key: UnitKey = Branches.UNSET.key,
@@ -38,8 +42,10 @@ open class Branch(path: Path,
         return add(Branch(path.resolve(name), name = name, key = key)) as Branch
     }
 
-    fun addUnit(data: RawData, key: UnitKey, name: String): ContentUnit {
-        return add(data.convert(path, key, name)) as ContentUnit
+    fun addUnit(data: RawData, key: UnitKey, name: String, extension: String): ContentUnit {
+        val clazz = data.unit.kotlin
+        val constructor = clazz.primaryConstructor ?: throw IllegalArgumentException("Конструктор не найден")
+        return add(constructor.call(path, name, extension, data, key) as ResourceUnit) as ContentUnit
     }
 
     fun add(unit: ResourceUnit): ResourceUnit {
@@ -49,6 +55,32 @@ open class Branch(path: Path,
             children.add(it)
         }
     }
+
+    fun zip(outputZip: File, sourceFolder: File = path.toFile()) {
+        // Проверяем существование и создаем выходной файл, если нужно
+        outputZip.apply {
+            parentFile?.mkdirs()
+            if (!exists()) createNewFile()
+            require(canWrite()) { "Нет доступа для записи: $absolutePath" }
+        }
+
+        require(sourceFolder.exists() && sourceFolder.isDirectory) {
+            "Исходная папка должна существовать и быть директорией: ${sourceFolder.absolutePath}"
+        }
+
+        // Создаем ZIP-архив
+        ZipOutputStream(outputZip.outputStream()).use { zipOut ->
+            sourceFolder.walkTopDown().forEach { file ->
+                val relativePath = file.relativeTo(sourceFolder).path + if (file.isDirectory) "/" else ""
+                zipOut.putNextEntry(ZipEntry(relativePath))
+                if (file.isFile) file.inputStream().copyTo(zipOut)
+                zipOut.closeEntry()
+            }
+        }
+
+        IhLogger.log("<<[!]>> Архив ${outputZip.name} создан успешно.")
+    }
+
 
     fun pasteNonStructured(sourcePath: Path) {
         if (!Files.exists(sourcePath)) { IhLogger.log("[!] Путь не найден: $sourcePath", type = MessageType.ERROR); return }

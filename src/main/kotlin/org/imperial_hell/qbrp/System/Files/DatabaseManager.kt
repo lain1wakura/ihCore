@@ -1,4 +1,4 @@
-package org.imperial_hell.qbrp.Files
+package org.imperial_hell.qbrp.System.Files
 
 import org.litote.kmongo.KMongo
 import com.mongodb.client.MongoDatabase

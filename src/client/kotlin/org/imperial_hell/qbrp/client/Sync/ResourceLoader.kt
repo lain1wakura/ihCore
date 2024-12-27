@@ -4,7 +4,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import org.imperial_hell.ihSystems.IhLogger
-import org.imperial_hell.qbrp.Files.IhConfig
+import org.imperial_hell.qbrp.System.Files.IhConfig
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream

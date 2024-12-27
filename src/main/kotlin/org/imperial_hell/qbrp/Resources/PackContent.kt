@@ -2,7 +2,7 @@ package org.imperial_hell.qbrp.Resources
 
 import org.imperial_hell.qbrp.Resources.Data.ModelData
 import org.imperial_hell.qbrp.Resources.PathFormat.getModelType
-import org.imperial_hell.qbrp.Resources.Structure.ModelBundle
+import org.imperial_hell.qbrp.Resources.GameContent.ModelBundle
 import org.imperial_hell.qbrp.Resources.Structure.PackStructure
 import java.util.UUID
 import java.nio.file.Path

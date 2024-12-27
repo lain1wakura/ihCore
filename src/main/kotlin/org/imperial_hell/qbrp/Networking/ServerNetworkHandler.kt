@@ -1,6 +1,5 @@
 package org.imperial_hell.qbrp.server
 
-import net.minecraft.util.math.BlockPos
 import org.imperial_hell.qbrp.Characters.System.UserManager
 import org.imperial_hell.common.PacketsList
 import org.imperial_hell.common.Packets.PlayerDataPacket
@@ -9,12 +8,11 @@ import org.imperial_hell.common.Packets.SignalPacket
 import org.imperial_hell.common.Packets.StringPacket
 import org.imperial_hell.qbrp.Networking.ServerPacketSender
 import org.imperial_hell.common.Proxy.ProxyPlayerData
-import org.imperial_hell.qbrp.Blocks.BlockDataManager
-import org.imperial_hell.qbrp.Blocks.ChuckHandler
+import org.imperial_hell.qbrp.Game.Blocks.BlockDataManager
 import java.util.UUID
 import org.imperial_hell.qbrp.Networking.ServerReceiver
 
-class ServerNetworkHandler(val userManager: UserManager, val blockDataManager: BlockDataManager) {
+class ServerNetworkHandler(val userManager: UserManager) {
 
     // Регистрация обработчиков пакетов на сервере
     fun registerServer() {

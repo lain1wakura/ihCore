@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory
 
 object IhLogger {
     private val logger: Logger = LoggerFactory.getLogger("IhLogger")
-    var debug: Boolean = true // Флаг для включения/выключения логирования
+    var debug: Boolean = false // Флаг для включения/выключения логирования
 
     /**
      * Логирование сообщения с заданным типом.

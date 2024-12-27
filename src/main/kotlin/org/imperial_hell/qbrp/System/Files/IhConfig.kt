@@ -1,4 +1,4 @@
-package org.imperial_hell.qbrp.Files
+package org.imperial_hell.qbrp.System.Files
 
 import java.nio.file.Paths
 

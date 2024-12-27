@@ -1,13 +1,16 @@
 package org.imperial_hell.qbrp.Resources.ContentUnits
 
+import net.minecraft.datafixer.fix.BlockEntitySignTextStrictJsonFix.GSON
+import org.imperial_hell.qbrp.Resources.Data.RawData
 import org.imperial_hell.qbrp.Resources.ISavable
 import org.imperial_hell.qbrp.Resources.UnitKey
 import java.nio.file.Path
 
-abstract class ContentUnit(
+open class ContentUnit(
     path: Path,
     name: String,
     extension: String = "txt", // Укажите расширение по умолчанию, например, txt
+    open val data: RawData,
     val key: UnitKey = UnitKey("unset")
 ) : ResourceUnit(path.resolve("$name.$extension") as Path), ISavable {
 
@@ -24,4 +27,9 @@ abstract class ContentUnit(
         structure?.registerContent(this)
         return this
     }
+
+    override fun save() {
+        path.toFile().writeText(GSON.toJson(data))
+    }
+
 }

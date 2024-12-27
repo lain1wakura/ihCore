@@ -1,6 +1,5 @@
 package org.imperial_hell.qbrp
 
-import com.mojang.brigadier.CommandDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -9,49 +8,34 @@ import net.fabricmc.api.EnvType
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.loader.api.FabricLoader
-import net.minecraft.item.Item
-import net.minecraft.registry.Registries
-import net.minecraft.registry.Registry
 import net.minecraft.server.MinecraftServer
-import net.minecraft.server.command.ServerCommandSource
-import net.minecraft.util.Identifier
 import org.imperial_hell.ihSystems.IhLogger
-import org.imperial_hell.qbrp.Blocks.BlockDataManager
-import org.imperial_hell.qbrp.Blocks.ChuckHandler
-import org.imperial_hell.qbrp.Blocks.qbBlocksService
+import org.imperial_hell.qbrp.Game.Blocks.ChuckHandler
 import org.imperial_hell.qbrp.Characters.System.CharacterManager
 import org.imperial_hell.qbrp.Characters.System.UserManager
 import org.imperial_hell.qbrp.Characters.System.UserService
-import org.imperial_hell.qbrp.Commands.StressTestCommand
-import org.imperial_hell.qbrp.Files.DatabaseManager
+import org.imperial_hell.qbrp.System.Files.DatabaseManager
 import org.imperial_hell.qbrp.Networking.PlayerHandler
 import org.imperial_hell.qbrp.Sync.HTTP.ResourceServer
 import org.imperial_hell.qbrp.Sync.PlayerDataManager
-import org.imperial_hell.qbrp.Removed.ResourcePackBaker
 import org.imperial_hell.common.Utils.ConsoleColors
 import org.imperial_hell.common.Utils.TimerUpdater
 import org.imperial_hell.qbrp.API.qbApi
+import org.imperial_hell.qbrp.Game.GameContent
 import org.imperial_hell.qbrp.Secrets.Databases
-import org.imperial_hell.qbrp.client.Items.qbItem
 import org.imperial_hell.qbrp.server.ServerNetworkHandler
 import org.imperial_hell.qbrp.Resources.ResourceCentre
+import org.imperial_hell.qbrp.System.CommandsRepository
 
 //import su.plo.voice.api.server.PlasmoVoiceServer
 
 class qbSync : ModInitializer {
 
-    lateinit var blockDatabaseManager: DatabaseManager
-    lateinit var characterDatabaseManager: DatabaseManager
-    lateinit var userManager: UserManager
-    lateinit var playerDataManager: PlayerDataManager
-    lateinit var blockDataManager: BlockDataManager
     lateinit var resourceServer: ResourceServer
     lateinit var chunkHandler: ChuckHandler
+    lateinit var gameContent: GameContent
 
-    var connectionState = false
-    var itemsState = ""
-
-//    private val addon = qbrpAddon()
+    val commandsRepository = CommandsRepository()
 
     override fun onInitialize() {
         // Запуск ResourceServer в корутине
@@ -59,15 +43,12 @@ class qbSync : ModInitializer {
             GlobalScope.launch {
                 runResourceServer()
             }
-            ResourceCentre.bakeResourcePack()
-            initDatabase()
             registerServerLifecycle()
         }
-        registerQbItem()
+        registerContent()
         qbApi.register()
         TimerUpdater.registerCycle()
-
-//        PlasmoVoiceServer.getAddonsLoader().load(addon)
+        printDataBlock()
     }
 
     private suspend fun runResourceServer() {
@@ -82,35 +63,21 @@ class qbSync : ModInitializer {
         }
     }
 
-    fun initDatabase() {
-        blockDatabaseManager = DatabaseManager(Databases.BLOCKS_KEY, "qbblocks")
-        connectionState = blockDatabaseManager.connect()
-        characterDatabaseManager = DatabaseManager(Databases.CHARACTERS_KEY, "qbblocks")
+    fun registerContent() {
+        gameContent = GameContent()
+        ResourceCentre.bakeResourcePack(gameContent.items.baseItems)
     }
 
-    fun registerQbItem() {
-        Registry.register(Registries.ITEM, Identifier(MOD_ID, "custom_item_handheld"), CUSTOM_ITEM_HANDHELD)
-        Registry.register(Registries.ITEM, Identifier(MOD_ID, "custom_item_generated"), CUSTOM_ITEM_GENERATED)
-    }
-
-//    fun initPlasmoAddon() {
-//        PlasmoVoiceServer.getAddonsLoader().load(plasmoAddon)
-//    }
-
-    fun registerCommands(dispatcher: CommandDispatcher<ServerCommandSource>) {
-        //SyncCommand(userManager).register(dispatcher)
-        StressTestCommand(blockDataManager).register(dispatcher)
-    }
 
     fun registerHandlers() {
-        PlayerHandler(userManager).registerEvents()
-        ServerNetworkHandler(userManager, blockDataManager).registerServer()
+        //PlayerHandler(userManager).registerEvents()
+        //ServerNetworkHandler(userManager).registerServer()
     }
 
     fun registerServerLifecycle() {
         ServerLifecycleEvents.SERVER_STOPPING.register(ServerLifecycleEvents.ServerStopping { server ->
-            blockDataManager.removeAll()
-            userManager.characterManager.saveAllCharacters()
+            gameContent.blocks.manager.removeAll()
+            //userManager.characterManager.saveAllCharacters()
             resourceServer.stop()
         })
 
@@ -120,16 +87,14 @@ class qbSync : ModInitializer {
     }
 
     fun init(server: MinecraftServer) {
-        val userService = UserService(characterDatabaseManager)
-        blockDataManager = BlockDataManager(qbBlocksService(blockDatabaseManager))
-        chunkHandler = ChuckHandler(blockDataManager)
+        //val userService = UserService(characterDatabaseManager)
+        chunkHandler = ChuckHandler(gameContent.blocks.manager)
         chunkHandler.register()
-        playerDataManager = PlayerDataManager(server)
-        userManager = UserManager(userService, CharacterManager(userService), playerDataManager)
+        //playerDataManager = PlayerDataManager(server)
+        //userManager = UserManager(userService, CharacterManager(userService), playerDataManager)
 
-        registerCommands(server.commandManager.dispatcher)
+        commandsRepository.initCommands(server.commandManager.dispatcher)
         registerHandlers()
-        printDataBlock()
     }
 
     fun printDataBlock() {
@@ -145,21 +110,19 @@ class qbSync : ModInitializer {
             IhLogger.log(ConsoleColors.bold("<<$line>>"))
         }
 
-        if (connectionState) {
-            IhLogger.log("<<|>> Подключение к базе данных ${blockDatabaseManager.db?.name} успешно.")
+        if (gameContent.blocks.database.error == "") {
+            IhLogger.log("<<|>> Подключение к базе данных ${gameContent.blocks.database.db?.name} успешно.")
         } else {
-            IhLogger.log("| Ошибка при подключении к базе данных ${blockDatabaseManager.db?.name}: ${blockDatabaseManager.error}", IhLogger.MessageType.ERROR)
+            IhLogger.log("| Ошибка при подключении к базе данных ${gameContent.blocks.database.db?.name}: ${gameContent.blocks.database.error}", IhLogger.MessageType.ERROR)
         }
-        if (itemsState == "") {
-            IhLogger.log("<<|>> Набор ресурсов инициализирован. Количество моделей: ${ResourcePackBaker.models_count}")
+        if (ResourceCentre.pack.isBaked()) {
+            IhLogger.log("<<|>> Набор ресурсов инициализирован. Количество моделей: ${ResourceCentre.pack.structure.modelsRegistry.children.size}")
         } else {
-            IhLogger.log("| Ошибка при инициализации набора ресурсов: $itemsState", IhLogger.MessageType.ERROR)
+            IhLogger.log("| Ошибка при инициализации набора ресурсов. Пакет не создан.", IhLogger.MessageType.ERROR)
         }
     }
 
     companion object {
         const val MOD_ID = "qbrp"
-        var CUSTOM_ITEM_HANDHELD = qbItem(Item.Settings())
-        var CUSTOM_ITEM_GENERATED = qbItem(Item.Settings())
     }
 }
